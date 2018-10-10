@@ -50,10 +50,14 @@ public class Tokenizer {
                 cursor++;
             }
         } else if(Character.isJavaIdentifierStart(c)) {
-            type = Token.Type.Identifier;
             cursor++;
             while (!isAtEnd() && Character.isJavaIdentifierPart(peek())) {
                 cursor++;
+            }
+            if (Keyword.isKeyword(source.substring(start, cursor))) {
+                type = Token.Type.Keyword;
+            } else {
+                type = Token.Type.Identifier;
             }
         } else {
             throw LexingException.invalidTokenStart(c);

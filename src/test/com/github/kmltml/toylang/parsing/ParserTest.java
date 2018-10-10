@@ -1,5 +1,6 @@
 package com.github.kmltml.toylang.parsing;
 
+import com.github.kmltml.toylang.ast.BoolExpression;
 import com.github.kmltml.toylang.ast.NumberExpression;
 import com.github.kmltml.toylang.ast.StringExpression;
 import com.github.kmltml.toylang.ast.VarExpression;
@@ -45,5 +46,23 @@ public class ParserTest {
                 Token.EOF
         });
         assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_booleanLiteralTrue() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("true", Token.Type.Keyword),
+                Token.EOF
+        });
+        assertEquals(new BoolExpression(true), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_booleanLiteralFalse() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("false", Token.Type.Keyword),
+                Token.EOF
+        });
+        assertEquals(new BoolExpression(false), parser.parseExpressionWhole());
     }
 }

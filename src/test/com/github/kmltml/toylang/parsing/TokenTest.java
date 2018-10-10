@@ -44,4 +44,17 @@ public class TokenTest {
     public void numberValue_floating() throws Exception {
         assertEquals(new BigDecimal("0.42"), new Token("0.42", Type.Number).numberValue());
     }
+
+
+    @Test
+    public void keywordValue_boolean() throws Exception {
+        assertEquals(Keyword.True, new Token("true", Type.Keyword).keywordValue());
+        assertEquals(Keyword.False, new Token("false", Type.Keyword).keywordValue());
+    }
+
+    @Test
+    public void booleanValue() throws Exception {
+        assertEquals(true, new Token("true", Type.Keyword).booleanValue());
+        assertEquals(false, new Token("false", Type.Keyword).booleanValue());
+    }
 }

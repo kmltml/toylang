@@ -92,4 +92,13 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("$test  _testToo").tokenize());
     }
+
+    @Test
+    public void tokenize_booleanKeywords() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("true", Type.Keyword),
+                new Token("false", Type.Keyword),
+                Token.EOF
+        }, new Tokenizer("true  false").tokenize());
+    }
 }

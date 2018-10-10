@@ -1,5 +1,6 @@
 package com.github.kmltml.toylang;
 
+import com.github.kmltml.toylang.runtime.value.BoolValue;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
 import com.github.kmltml.toylang.runtime.value.StringValue;
 import org.junit.Test;
@@ -28,5 +29,12 @@ public class InterpreterTest {
         Interpreter interpreter = new Interpreter();
         interpreter.addBinding("foo", new NumberValue(42));
         assertEquals(new NumberValue(42), interpreter.interpretExpression("foo"));
+    }
+
+    @Test
+    public void interpretExpression_boolLiterals() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        assertEquals(new BoolValue(true), interpreter.interpretExpression("true"));
+        assertEquals(new BoolValue(false), interpreter.interpretExpression("false"));
     }
 }

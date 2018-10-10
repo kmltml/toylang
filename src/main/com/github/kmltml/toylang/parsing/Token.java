@@ -16,7 +16,7 @@ public class Token {
     }
 
     public enum Type {
-        Eof, Identifier, Number, Comma, String
+        Eof, Identifier, Number, Keyword, String
     }
 
     @Override
@@ -44,6 +44,10 @@ public class Token {
 
     public boolean matches(Type t) {
         return t == type;
+    }
+
+    public boolean matchesKeyword(Keyword k) {
+        return type == Type.Keyword && keywordValue() == k;
     }
 
     public String stringValue() {
@@ -75,6 +79,22 @@ public class Token {
 
     public String identifierName() {
         return source.trim();
+    }
+
+    public Keyword keywordValue() {
+        return Keyword.forSource(source);
+    }
+
+    public boolean booleanValue() {
+        Keyword key = keywordValue();
+        switch (key) {
+            case True:
+                return true;
+            case False:
+                return false;
+            default:
+                throw new IllegalStateException("booleanValue is only defined for keywords true and false");
+        }
     }
 
 }
