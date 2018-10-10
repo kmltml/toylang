@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.parsing;
 
 import com.github.kmltml.toylang.ast.NumberExpression;
 import com.github.kmltml.toylang.ast.StringExpression;
+import com.github.kmltml.toylang.ast.VarExpression;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -35,5 +36,14 @@ public class ParserTest {
                 Token.EOF
         });
         assertEquals(new NumberExpression(new BigDecimal("0.42")), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_variableAccess() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Token.Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
     }
 }

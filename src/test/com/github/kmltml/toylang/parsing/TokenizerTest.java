@@ -74,4 +74,22 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("10 20").tokenize());
     }
+
+
+    @Test
+    public void tokenize_identifier() throws Exception {
+        assertArrayEquals(new Token[] {
+                new Token("test123$_", Type.Identifier),
+                Token.EOF
+        }, new Tokenizer(" test123$_  ").tokenize());
+    }
+
+    @Test
+    public void tokenize_identifiersSeparated() throws Exception {
+        assertArrayEquals(new Token[] {
+                new Token("$test", Type.Identifier),
+                new Token("_testToo", Type.Identifier),
+                Token.EOF
+        }, new Tokenizer("$test  _testToo").tokenize());
+    }
 }

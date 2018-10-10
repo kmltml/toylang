@@ -3,6 +3,7 @@ package com.github.kmltml.toylang.parsing;
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.ast.NumberExpression;
 import com.github.kmltml.toylang.ast.StringExpression;
+import com.github.kmltml.toylang.ast.VarExpression;
 
 public class Parser {
 
@@ -44,6 +45,8 @@ public class Parser {
                 return new StringExpression(token);
             case Number:
                 return new NumberExpression(token);
+            case Identifier:
+                return new VarExpression(token);
             default:
                 throw ParsingException.unexpectedToken("Expression Start", token);
         }

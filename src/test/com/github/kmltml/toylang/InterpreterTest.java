@@ -22,4 +22,11 @@ public class InterpreterTest {
     public void interpretExpression_floatLiteral() throws Exception {
         assertEquals(new NumberValue("0.42"), new Interpreter().interpretExpression("0.42"));
     }
+
+    @Test
+    public void interpretExpression_varAccess() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("foo", new NumberValue(42));
+        assertEquals(new NumberValue(42), interpreter.interpretExpression("foo"));
+    }
 }

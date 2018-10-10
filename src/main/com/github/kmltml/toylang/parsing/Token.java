@@ -15,6 +15,10 @@ public class Token {
         this.type = type;
     }
 
+    public enum Type {
+        Eof, Identifier, Number, Comma, String
+    }
+
     @Override
     public String toString() {
         return "'" + source + "'(" + type + ")";
@@ -42,10 +46,6 @@ public class Token {
         return t == type;
     }
 
-    public enum Type {
-        Eof, Identifier, Number, Comma, String
-    }
-
     public String stringValue() {
         StringBuilder ret = new StringBuilder();
         int i = 0;
@@ -71,6 +71,10 @@ public class Token {
 
     public BigDecimal numberValue() {
         return new BigDecimal(source);
+    }
+
+    public String identifierName() {
+        return source.trim();
     }
 
 }

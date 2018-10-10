@@ -1,6 +1,8 @@
 package com.github.kmltml.toylang.ast;
 
 import com.github.kmltml.toylang.parsing.Token;
+import com.github.kmltml.toylang.runtime.EvaluationException;
+import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Value;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
 
@@ -22,7 +24,7 @@ public class NumberExpression implements Expression {
     }
 
     @Override
-    public Value evaluate() {
+    public Value evaluate(Scope scope) throws EvaluationException {
         return new NumberValue(value);
     }
 
