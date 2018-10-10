@@ -32,17 +32,35 @@ public class Tokenizer {
         Token.Type type;
         if (c == '"') {
             type = Token.Type.String;
-            do {
-                cursor++;
+            cursor++;
+            while (peek() != '"') {
                 if(peek() == '\\') {
-                    cursor += 2;
+                    cursor++;
                 }
-            } while (peek() != '"');
+                cursor++;
+            }
+            cursor++;
+        } else if(isDigit(c)) {
+            type = Token.Type.Number;
+            boolean dotEncountered = false;
+            while (!isAtEnd() && (isDigit(peek()) || !dotEncountered && peek() == '.')) {
+                if (peek() == '.') {
+                    dotEncountered = true;
+                }
+                cursor++;
+            }
         } else {
             throw LexingException.invalidTokenStart(c);
         }
-        cursor++;
         return new Token(source.substring(start, cursor), type);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private boolean isAtEnd() {
+        return cursor >= source.length();
     }
 
     private char peek() {

@@ -1,6 +1,7 @@
 package com.github.kmltml.toylang.parsing;
 
 import com.github.kmltml.toylang.ast.Expression;
+import com.github.kmltml.toylang.ast.NumberExpression;
 import com.github.kmltml.toylang.ast.StringExpression;
 
 public class Parser {
@@ -41,6 +42,8 @@ public class Parser {
         switch (token.getType()) {
             case String:
                 return new StringExpression(token);
+            case Number:
+                return new NumberExpression(token);
             default:
                 throw ParsingException.unexpectedToken("Expression Start", token);
         }

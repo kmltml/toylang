@@ -49,4 +49,29 @@ public class TokenizerTest {
         }, new Tokenizer("\"x\\\"\"").tokenize());
     }
 
+
+    @Test
+    public void tokenize_integer() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("42", Type.Number),
+                Token.EOF
+        }, new Tokenizer("42").tokenize());
+    }
+
+    @Test
+    public void tokenize_floating() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("0.42", Type.Number),
+                Token.EOF
+        }, new Tokenizer("0.42").tokenize());
+    }
+
+    @Test
+    public void tokenize_numbersSeparated() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("10", Type.Number),
+                new Token("20", Type.Number),
+                Token.EOF
+        }, new Tokenizer("10 20").tokenize());
+    }
 }

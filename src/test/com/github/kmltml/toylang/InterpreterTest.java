@@ -1,5 +1,6 @@
 package com.github.kmltml.toylang;
 
+import com.github.kmltml.toylang.runtime.value.NumberValue;
 import com.github.kmltml.toylang.runtime.value.StringValue;
 import org.junit.Test;
 
@@ -10,5 +11,15 @@ public class InterpreterTest {
     @Test
     public void interpretExpression_stringLiteral() throws Exception {
         assertEquals(new StringValue("Hello"), new Interpreter().interpretExpression("\"Hello\""));
+    }
+
+    @Test
+    public void interpretExpression_intLiteral() throws Exception {
+        assertEquals(new NumberValue(42), new Interpreter().interpretExpression("\t42 "));
+    }
+
+    @Test
+    public void interpretExpression_floatLiteral() throws Exception {
+        assertEquals(new NumberValue("0.42"), new Interpreter().interpretExpression("0.42"));
     }
 }
