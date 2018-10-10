@@ -40,4 +40,9 @@ public class NumberExpression implements Expression {
     public int hashCode() {
         return Objects.hash(value);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Number(%s)", value);
+    }
 }

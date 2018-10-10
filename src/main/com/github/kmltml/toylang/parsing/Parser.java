@@ -28,14 +28,15 @@ public class Parser {
         return getToken(cursor++);
     }
 
-    public void consume(Token.Type type) throws ParsingException {
+    public Token consume(Token.Type type) throws ParsingException {
         Token token = pop();
         if (!token.matches(type)) {
             throw ParsingException.unexpectedToken(type, token);
         }
+        return token;
     }
 
-    public Expression parseExpression() throws ParsingException {
+    public Expression parseAtomExpression() throws ParsingException {
         Token token = pop();
         switch (token.getType()) {
             case String:
@@ -55,8 +56,28 @@ public class Parser {
         }
     }
 
+    public Expression parseExpression(int precedence) throws ParsingException {
+        Expression left = parseAtomExpression();
+        while (currentPrecedence() > precedence) {
+            Token token = consume(Token.Type.Operator);
+            InfixOp op = token.infixOpValue();
+            Expression right = parseExpression(op.isLeftAssoc() ? op.getPrecedence() : op.getPrecedence() - 1);
+            left = new InfixExpression(op, left, right);
+        }
+        return left;
+    }
+
+    private int currentPrecedence() {
+        Token token = peek();
+        if (token.matches(Token.Type.Operator)) {
+            return token.infixOpValue().getPrecedence();
+        } else {
+            return 0;
+        }
+    }
+
     public Expression parseExpressionWhole() throws ParsingException {
-        Expression expr = parseExpression();
+        Expression expr = parseExpression(0);
         if (!isAtEnd()) {
             throw ParsingException.unexpectedToken(Token.Type.Eof, peek());
         }

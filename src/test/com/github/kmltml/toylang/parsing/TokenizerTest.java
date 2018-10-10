@@ -101,4 +101,16 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("true  false").tokenize());
     }
+
+
+    @Test
+    public void tokenize_infixOperators() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("+", Type.Operator),
+                new Token("**", Type.Operator),
+                new Token("=", Type.Operator),
+                new Token("<=", Type.Operator),
+                Token.EOF
+        }, new Tokenizer("+**= <=").tokenize());
+    }
 }

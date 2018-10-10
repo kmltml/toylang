@@ -40,7 +40,7 @@ public class Tokenizer {
                 cursor++;
             }
             cursor++;
-        } else if(isDigit(c)) {
+        } else if (isDigit(c)) {
             type = Token.Type.Number;
             boolean dotEncountered = false;
             while (!isAtEnd() && (isDigit(peek()) || !dotEncountered && peek() == '.')) {
@@ -49,7 +49,7 @@ public class Tokenizer {
                 }
                 cursor++;
             }
-        } else if(Character.isJavaIdentifierStart(c)) {
+        } else if (Character.isJavaIdentifierStart(c)) {
             cursor++;
             while (!isAtEnd() && Character.isJavaIdentifierPart(peek())) {
                 cursor++;
@@ -58,6 +58,17 @@ public class Tokenizer {
                 type = Token.Type.Keyword;
             } else {
                 type = Token.Type.Identifier;
+            }
+        } else if (InfixOp.isOperatorPrefix(String.valueOf(c))) {
+            type = Token.Type.Operator;
+            do {
+                cursor++;
+            } while (!isAtEnd() && InfixOp.isOperatorPrefix(source.substring(start, cursor)));
+            while (cursor >= start && !InfixOp.isOperator(source.substring(start, cursor))) {
+                cursor--;
+            }
+            if (cursor == start) {
+                throw LexingException.invalidOperator(c);
             }
         } else {
             throw LexingException.invalidTokenStart(c);

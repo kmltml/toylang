@@ -16,7 +16,7 @@ public class Token {
     }
 
     public enum Type {
-        Eof, Identifier, Number, Keyword, String
+        Eof, Identifier, Number, Keyword, String, Operator
     }
 
     @Override
@@ -95,6 +95,10 @@ public class Token {
             default:
                 throw new IllegalStateException("booleanValue is only defined for keywords true and false");
         }
+    }
+
+    public InfixOp infixOpValue() {
+        return InfixOp.fromSource(source);
     }
 
 }

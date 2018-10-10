@@ -1,9 +1,6 @@
 package com.github.kmltml.toylang.parsing;
 
-import com.github.kmltml.toylang.ast.BoolExpression;
-import com.github.kmltml.toylang.ast.NumberExpression;
-import com.github.kmltml.toylang.ast.StringExpression;
-import com.github.kmltml.toylang.ast.VarExpression;
+import com.github.kmltml.toylang.ast.*;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -64,5 +61,69 @@ public class ParserTest {
                 Token.EOF
         });
         assertEquals(new BoolExpression(false), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_simpleInfix() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("1", Token.Type.Number),
+                new Token("+", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(
+                new InfixExpression(InfixOp.Plus, new NumberExpression(BigDecimal.valueOf(1)), new NumberExpression(BigDecimal.valueOf(2))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_infixl() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("1", Token.Type.Number),
+                new Token("+", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                new Token("+", Token.Type.Operator),
+                new Token("3", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(
+                new InfixExpression(InfixOp.Plus,
+                        new InfixExpression(InfixOp.Plus, new NumberExpression(BigDecimal.valueOf(1)), new NumberExpression(BigDecimal.valueOf(2))),
+                        new NumberExpression(BigDecimal.valueOf(3))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_infixr() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("1", Token.Type.Number),
+                new Token("**", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                new Token("**", Token.Type.Operator),
+                new Token("3", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(
+                new InfixExpression(InfixOp.Exp,
+                        new NumberExpression(BigDecimal.valueOf(1)),
+                        new InfixExpression(InfixOp.Exp, new NumberExpression(BigDecimal.valueOf(2)), new NumberExpression(BigDecimal.valueOf(3)))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_mixedPrecedence() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("1", Token.Type.Number),
+                new Token("+", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                new Token("*", Token.Type.Operator),
+                new Token("3", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(
+                new InfixExpression(InfixOp.Plus,
+                        new NumberExpression(BigDecimal.valueOf(1)),
+                        new InfixExpression(InfixOp.Times, new NumberExpression(BigDecimal.valueOf(2)), new NumberExpression(BigDecimal.valueOf(3)))),
+                parser.parseExpressionWhole());
     }
 }
