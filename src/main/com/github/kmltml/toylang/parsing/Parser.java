@@ -46,6 +46,14 @@ public class Parser {
         }
     }
 
+    public Expression parseExpressionWhole() throws ParsingException {
+        Expression expr = parseExpression();
+        if (!isAtEnd()) {
+            throw ParsingException.unexpectedToken(Token.Type.Eof, peek());
+        }
+        return expr;
+    }
+
     public boolean isAtEnd() {
         return peek().matches(Token.Type.Eof);
     }
