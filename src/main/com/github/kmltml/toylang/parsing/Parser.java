@@ -2,6 +2,9 @@ package com.github.kmltml.toylang.parsing;
 
 import com.github.kmltml.toylang.ast.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Parser {
 
     private Token[] tokens;
@@ -68,6 +71,14 @@ public class Parser {
                 Expression expr = parseExpression(0);
                 consume(Token.Type.RParen);
                 return expr;
+            case LBrace:
+                List<Expression> statements = new ArrayList<>();
+                while (!peek().matches(Token.Type.RBrace)) {
+                    statements.add(parseExpression(0));
+                    consume(Token.Type.Semicolon);
+                }
+                consume(Token.Type.RBrace);
+                return new BlockExpression(statements);
             case Operator:
                 if (PrefixOp.isPrefixOp(token.getSource())) {
                     PrefixOp op = token.prefixOpValue();

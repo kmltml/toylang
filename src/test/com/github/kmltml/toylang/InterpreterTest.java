@@ -92,4 +92,12 @@ public class InterpreterTest {
         interpreter.addBinding("x", new NumberValue(10));
         assertEquals(new NumberValue(10), interpreter.interpretExpression("if(x < 0) -x else x"));
     }
+
+    @Test
+    public void interpretExpression_block() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("foo", new NumberValue(10));
+        assertEquals(new NumberValue(40), interpreter.interpretExpression("{ foo = foo + 10; foo * 2; }"));
+        assertEquals(new NumberValue(20), interpreter.interpretExpression("foo"));
+    }
 }

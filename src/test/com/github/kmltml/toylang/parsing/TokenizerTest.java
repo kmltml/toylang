@@ -141,4 +141,21 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("(  )").tokenize());
     }
+
+    @Test
+    public void tokenize_braces() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("{", Type.LBrace),
+                new Token("}", Type.RBrace),
+                Token.EOF
+        }, new Tokenizer("{  }").tokenize());
+    }
+
+    @Test
+    public void tokenize_semicolon() throws Exception {
+        assertArrayEquals(new Token[] {
+                new Token(";", Type.Semicolon),
+                Token.EOF
+        }, new Tokenizer(";").tokenize());
+    }
 }

@@ -94,6 +94,12 @@ public class Tokenizer {
             type = Token.Type.LParen;
         } else if (c == ')') {
             type = Token.Type.RParen;
+        } else if (c == '{') {
+            type = Token.Type.LBrace;
+        } else if (c == '}') {
+            type = Token.Type.RBrace;
+        } else if (c == ';') {
+            type = Token.Type.Semicolon;
         } else {
             throw LexingException.invalidTokenStart(c);
         }

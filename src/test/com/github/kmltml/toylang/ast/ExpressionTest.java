@@ -10,6 +10,8 @@ import com.github.kmltml.toylang.runtime.value.UnitValue;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -205,5 +207,21 @@ public class ExpressionTest {
                 new IfExpression(new BoolExpression(true), new NumberExpression(1), new NumberExpression(0)).evaluate(new Scope()));
         assertEquals(new NumberValue(0),
                 new IfExpression(new BoolExpression(false), new NumberExpression(1), new NumberExpression(0)).evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_block() throws Exception {
+        Scope scope = new Scope();
+        scope.putValue("foo", new NumberValue(10));
+        assertEquals(new NumberValue(20), new BlockExpression(Arrays.asList(
+                new InfixExpression(InfixOp.Assign, new VarExpression("foo"), new InfixExpression(InfixOp.Plus, new VarExpression("foo"), new NumberExpression(10))),
+                new VarExpression("foo")
+        )).evaluate(scope));
+        assertEquals(new NumberValue(20), scope.getValue("foo").get());
+    }
+
+    @Test
+    public void evaluate_emptyBlock() throws Exception {
+        assertEquals(UnitValue.instance, new BlockExpression(Collections.emptyList()).evaluate(new Scope()));
     }
 }

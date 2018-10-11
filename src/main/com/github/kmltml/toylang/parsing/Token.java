@@ -21,7 +21,7 @@ public class Token {
 
     public enum Type {
         Eof, Identifier, Number, Keyword, String, Operator,
-        LParen, RParen
+        LParen, RParen, LBrace, Semicolon, RBrace
     }
 
     @Override

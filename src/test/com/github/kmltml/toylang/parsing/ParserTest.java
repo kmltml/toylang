@@ -1,9 +1,11 @@
 package com.github.kmltml.toylang.parsing;
 
 import com.github.kmltml.toylang.ast.*;
+import com.github.kmltml.toylang.parsing.Token.Type;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,7 +14,7 @@ public class ParserTest {
     @Test
     public void parseExpression_stringLiteral() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("\"Hello\"", Token.Type.String),
+                new Token("\"Hello\"", Type.String),
                 Token.EOF
         });
         assertEquals(new StringExpression("Hello"), parser.parseExpressionWhole());
@@ -21,7 +23,7 @@ public class ParserTest {
     @Test
     public void parseExpression_intLiteral() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("42", Token.Type.Number),
+                new Token("42", Type.Number),
                 Token.EOF
         });
         assertEquals(new NumberExpression(new BigDecimal(42)), parser.parseExpressionWhole());
@@ -30,7 +32,7 @@ public class ParserTest {
     @Test
     public void parseExpression_floatLiteral() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("0.42", Token.Type.Number),
+                new Token("0.42", Type.Number),
                 Token.EOF
         });
         assertEquals(new NumberExpression(new BigDecimal("0.42")), parser.parseExpressionWhole());
@@ -39,7 +41,7 @@ public class ParserTest {
     @Test
     public void parseExpression_variableAccess() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("foo", Token.Type.Identifier),
+                new Token("foo", Type.Identifier),
                 Token.EOF
         });
         assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
@@ -48,7 +50,7 @@ public class ParserTest {
     @Test
     public void parseExpression_booleanLiteralTrue() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("true", Token.Type.Keyword),
+                new Token("true", Type.Keyword),
                 Token.EOF
         });
         assertEquals(new BoolExpression(true), parser.parseExpressionWhole());
@@ -57,7 +59,7 @@ public class ParserTest {
     @Test
     public void parseExpression_booleanLiteralFalse() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("false", Token.Type.Keyword),
+                new Token("false", Type.Keyword),
                 Token.EOF
         });
         assertEquals(new BoolExpression(false), parser.parseExpressionWhole());
@@ -66,9 +68,9 @@ public class ParserTest {
     @Test
     public void parseExpression_simpleInfix() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("1", Token.Type.Number),
-                new Token("+", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
+                new Token("1", Type.Number),
+                new Token("+", Type.Operator),
+                new Token("2", Type.Number),
                 Token.EOF
         });
         assertEquals(
@@ -79,11 +81,11 @@ public class ParserTest {
     @Test
     public void parseExpression_infixl() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("1", Token.Type.Number),
-                new Token("+", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
-                new Token("+", Token.Type.Operator),
-                new Token("3", Token.Type.Number),
+                new Token("1", Type.Number),
+                new Token("+", Type.Operator),
+                new Token("2", Type.Number),
+                new Token("+", Type.Operator),
+                new Token("3", Type.Number),
                 Token.EOF
         });
         assertEquals(
@@ -96,11 +98,11 @@ public class ParserTest {
     @Test
     public void parseExpression_infixr() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("1", Token.Type.Number),
-                new Token("**", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
-                new Token("**", Token.Type.Operator),
-                new Token("3", Token.Type.Number),
+                new Token("1", Type.Number),
+                new Token("**", Type.Operator),
+                new Token("2", Type.Number),
+                new Token("**", Type.Operator),
+                new Token("3", Type.Number),
                 Token.EOF
         });
         assertEquals(
@@ -113,11 +115,11 @@ public class ParserTest {
     @Test
     public void parseExpression_mixedPrecedence() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("1", Token.Type.Number),
-                new Token("+", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
-                new Token("*", Token.Type.Operator),
-                new Token("3", Token.Type.Number),
+                new Token("1", Type.Number),
+                new Token("+", Type.Operator),
+                new Token("2", Type.Number),
+                new Token("*", Type.Operator),
+                new Token("3", Type.Number),
                 Token.EOF
         });
         assertEquals(
@@ -130,11 +132,11 @@ public class ParserTest {
     @Test
     public void parseExpression_prefixOperators() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("+", Token.Type.Operator),
-                new Token("-", Token.Type.Operator),
-                new Token("~", Token.Type.Operator),
-                new Token("!", Token.Type.Operator),
-                new Token("foo", Token.Type.Identifier),
+                new Token("+", Type.Operator),
+                new Token("-", Type.Operator),
+                new Token("~", Type.Operator),
+                new Token("!", Type.Operator),
+                new Token("foo", Type.Identifier),
                 Token.EOF
         });
         assertEquals(new PrefixExpression(PrefixOp.Positive, new PrefixExpression(PrefixOp.Negative, new PrefixExpression(PrefixOp.BitNegation, new PrefixExpression(PrefixOp.Not, new VarExpression("foo"))))),
@@ -144,10 +146,10 @@ public class ParserTest {
     @Test
     public void parseExpression_negativeExpPrecedence() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("-", Token.Type.Operator),
-                new Token("foo", Token.Type.Identifier),
-                new Token("**", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
+                new Token("-", Type.Operator),
+                new Token("foo", Type.Identifier),
+                new Token("**", Type.Operator),
+                new Token("2", Type.Number),
                 Token.EOF
         });
         assertEquals(new PrefixExpression(PrefixOp.Negative, new InfixExpression(InfixOp.Exp, new VarExpression("foo"), new NumberExpression(2))),
@@ -157,10 +159,10 @@ public class ParserTest {
     @Test
     public void parseExpression_negativeTimesPrecedence() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("-", Token.Type.Operator),
-                new Token("foo", Token.Type.Identifier),
-                new Token("*", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
+                new Token("-", Type.Operator),
+                new Token("foo", Type.Identifier),
+                new Token("*", Type.Operator),
+                new Token("2", Type.Number),
                 Token.EOF
         });
         assertEquals(new PrefixExpression(PrefixOp.Negative, new InfixExpression(InfixOp.Times, new VarExpression("foo"), new NumberExpression(2))),
@@ -170,10 +172,10 @@ public class ParserTest {
     @Test
     public void parseExpression_negativePlusPrecedence() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("-", Token.Type.Operator),
-                new Token("foo", Token.Type.Identifier),
-                new Token("+", Token.Type.Operator),
-                new Token("2", Token.Type.Number),
+                new Token("-", Type.Operator),
+                new Token("foo", Type.Identifier),
+                new Token("+", Type.Operator),
+                new Token("2", Type.Number),
                 Token.EOF
         });
         assertEquals(new InfixExpression(InfixOp.Plus, new PrefixExpression(PrefixOp.Negative, new VarExpression("foo")), new NumberExpression(2)),
@@ -183,10 +185,10 @@ public class ParserTest {
     @Test
     public void parseExpression_negationAndPrecedence() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("!", Token.Type.Operator),
-                new Token("a", Token.Type.Identifier),
-                new Token("&&", Token.Type.Operator),
-                new Token("a", Token.Type.Identifier),
+                new Token("!", Type.Operator),
+                new Token("a", Type.Identifier),
+                new Token("&&", Type.Operator),
+                new Token("a", Type.Identifier),
                 Token.EOF
         });
         assertEquals(new InfixExpression(InfixOp.And, new PrefixExpression(PrefixOp.Not, new VarExpression("a")), new VarExpression("a")),
@@ -196,9 +198,9 @@ public class ParserTest {
     @Test
     public void parseExpression_parens() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("(", Token.Type.LParen),
-                new Token("foo", Token.Type.Identifier),
-                new Token(")", Token.Type.RParen),
+                new Token("(", Type.LParen),
+                new Token("foo", Type.Identifier),
+                new Token(")", Type.RParen),
                 Token.EOF
         });
         assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
@@ -207,11 +209,11 @@ public class ParserTest {
     @Test
     public void parseExpression_ifThen() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("if", Token.Type.Keyword),
-                new Token("(", Token.Type.LParen),
-                new Token("foo", Token.Type.Identifier),
-                new Token(")", Token.Type.RParen),
-                new Token("bar", Token.Type.Identifier),
+                new Token("if", Type.Keyword),
+                new Token("(", Type.LParen),
+                new Token("foo", Type.Identifier),
+                new Token(")", Type.RParen),
+                new Token("bar", Type.Identifier),
                 Token.EOF
         });
         assertEquals(new IfExpression(new VarExpression("foo"), new VarExpression("bar"), null), parser.parseExpressionWhole());
@@ -220,15 +222,32 @@ public class ParserTest {
     @Test
     public void parseExpression_ifThenElse() throws Exception {
         Parser parser = new Parser(new Token[]{
-                new Token("if", Token.Type.Keyword),
-                new Token("(", Token.Type.LParen),
-                new Token("foo", Token.Type.Identifier),
-                new Token(")", Token.Type.RParen),
-                new Token("bar", Token.Type.Identifier),
-                new Token("else", Token.Type.Keyword),
-                new Token("baz", Token.Type.Identifier),
+                new Token("if", Type.Keyword),
+                new Token("(", Type.LParen),
+                new Token("foo", Type.Identifier),
+                new Token(")", Type.RParen),
+                new Token("bar", Type.Identifier),
+                new Token("else", Type.Keyword),
+                new Token("baz", Type.Identifier),
                 Token.EOF
         });
         assertEquals(new IfExpression(new VarExpression("foo"), new VarExpression("bar"), new VarExpression("baz")), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_block() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("{", Type.LBrace),
+                new Token("a", Type.Identifier),
+                new Token(";", Type.Semicolon),
+                new Token("b", Type.Identifier),
+                new Token(";", Type.Semicolon),
+                new Token("}", Type.RBrace),
+                Token.EOF
+        });
+        assertEquals(new BlockExpression(Arrays.asList(
+                new VarExpression("a"),
+                new VarExpression("b")
+        )), parser.parseExpressionWhole());
     }
 }
