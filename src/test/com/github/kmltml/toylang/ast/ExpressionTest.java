@@ -241,4 +241,14 @@ public class ExpressionTest {
         assertEquals(new NumberValue(42), scope.getValue("foo").get());
     }
 
+    @Test
+    public void evaluate_while() throws Exception {
+        Scope scope = new Scope();
+        scope.putValue("x", new NumberValue(0));
+        assertEquals(UnitValue.instance, new WhileExpression(
+                new InfixExpression(InfixOp.Less, new VarExpression("x"), new NumberExpression(10)),
+                new InfixExpression(InfixOp.Assign, new VarExpression("x"), new InfixExpression(InfixOp.Plus, new VarExpression("x"), new NumberExpression(1)))
+        ).evaluate(scope));
+        assertEquals(new NumberValue(10), scope.getValue("x").get());
+    }
 }

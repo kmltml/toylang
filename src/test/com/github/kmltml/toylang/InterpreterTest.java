@@ -106,4 +106,19 @@ public class InterpreterTest {
         Interpreter interpreter = new Interpreter();
         assertEquals(new NumberValue(60), interpreter.interpretExpression("{ var x = 10; x = x + 20; var y = x * 2; var x = true; if(x) y else y * 2; }"));
     }
+
+    @Test
+    public void interpretExpression_while() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        assertEquals(new NumberValue(5050), interpreter.interpretExpression(
+                "{\n" +
+                "  var i = 1;\n" +
+                "  var sum = 0;\n" +
+                "  while(i <= 100) {\n" +
+                "    sum = sum + i;\n" +
+                "    i = i + 1;\n" +
+                "  };\n" +
+                "  sum;\n" +
+                "}"));
+    }
 }

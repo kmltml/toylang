@@ -262,4 +262,17 @@ public class ParserTest {
         });
         assertEquals(new VarDefExpression("foo", new NumberExpression(42)), parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_while() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("while", Type.Keyword),
+                new Token("(", Type.LParen),
+                new Token("cond", Type.Identifier),
+                new Token(")", Type.RParen),
+                new Token("body", Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new WhileExpression(new VarExpression("cond"), new VarExpression("body")), parser.parseExpressionWhole());
+    }
 }

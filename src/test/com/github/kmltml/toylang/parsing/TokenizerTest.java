@@ -115,8 +115,9 @@ public class TokenizerTest {
         assertArrayEquals(new Token[]{
                 new Token("if", Type.Keyword),
                 new Token("else", Type.Keyword),
+                new Token("while", Type.Keyword),
                 Token.EOF
-        }, new Tokenizer("if else").tokenize());
+        }, new Tokenizer("if else while").tokenize());
     }
 
     @Test

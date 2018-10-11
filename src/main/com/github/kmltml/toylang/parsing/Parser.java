@@ -53,7 +53,7 @@ public class Parser {
                     case True:
                     case False:
                         return new BoolExpression(token);
-                    case If:
+                    case If: {
                         consume(Token.Type.LParen);
                         Expression cond = parseExpression(0);
                         consume(Token.Type.RParen);
@@ -64,14 +64,23 @@ public class Parser {
                             ifFalse = parseExpression(0);
                         }
                         return new IfExpression(cond, ifTrue, ifFalse);
-                    case Var:
+                    }
+                    case Var: {
                         Token name = consume(Token.Type.Identifier);
                         Token op = consume(Token.Type.Operator);
-                        if(op.infixOpValue() != InfixOp.Assign) {
+                        if (op.infixOpValue() != InfixOp.Assign) {
                             throw ParsingException.unexpectedToken("=", op);
                         }
                         Expression right = parseExpression(0);
                         return new VarDefExpression(name.identifierName(), right);
+                    }
+                    case While: {
+                        consume(Token.Type.LParen);
+                        Expression cond = parseExpression(0);
+                        consume(Token.Type.RParen);
+                        Expression body = parseExpression(0);
+                        return new WhileExpression(cond, body);
+                    }
                     default:
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }
