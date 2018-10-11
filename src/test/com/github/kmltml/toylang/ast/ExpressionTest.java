@@ -210,6 +210,15 @@ public class ExpressionTest {
     }
 
     @Test
+    public void evaluate_if() throws Exception {
+        Scope scope = new Scope();
+        scope.putValue("foo", new NumberValue(0));
+        assertEquals(UnitValue.instance, new IfExpression(new BoolExpression(false),
+                new InfixExpression(InfixOp.Assign, new VarExpression("foo"), new NumberExpression(1)), null).evaluate(scope));
+        assertEquals(new NumberValue(0), scope.getValue("foo").get());
+    }
+
+    @Test
     public void evaluate_block() throws Exception {
         Scope scope = new Scope();
         scope.putValue("foo", new NumberValue(10));
@@ -231,4 +240,5 @@ public class ExpressionTest {
         assertEquals(UnitValue.instance, new VarDefExpression("foo", new NumberExpression(42)).evaluate(scope));
         assertEquals(new NumberValue(42), scope.getValue("foo").get());
     }
+
 }

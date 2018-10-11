@@ -3,6 +3,7 @@ package com.github.kmltml.toylang.ast;
 import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Value;
+import com.github.kmltml.toylang.runtime.value.UnitValue;
 
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class IfExpression extends Expression {
         if (condition.evaluate(scope).requireBool().getValue()) {
             return ifTrue.evaluate(scope);
         } else {
-            return ifFalse.evaluate(scope);
+            return ifFalse != null ? ifFalse.evaluate(scope) : UnitValue.instance;
         }
     }
 
