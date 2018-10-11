@@ -102,6 +102,14 @@ public class TokenizerTest {
         }, new Tokenizer("true  false").tokenize());
     }
 
+    @Test
+    public void tokenize_controlFlowKeywords() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("if", Type.Keyword),
+                new Token("else", Type.Keyword),
+                Token.EOF
+        }, new Tokenizer("if else").tokenize());
+    }
 
     @Test
     public void tokenize_infixOperators() throws Exception {

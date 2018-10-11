@@ -203,4 +203,32 @@ public class ParserTest {
         });
         assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_ifThen() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("if", Token.Type.Keyword),
+                new Token("(", Token.Type.LParen),
+                new Token("foo", Token.Type.Identifier),
+                new Token(")", Token.Type.RParen),
+                new Token("bar", Token.Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new IfExpression(new VarExpression("foo"), new VarExpression("bar"), null), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_ifThenElse() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("if", Token.Type.Keyword),
+                new Token("(", Token.Type.LParen),
+                new Token("foo", Token.Type.Identifier),
+                new Token(")", Token.Type.RParen),
+                new Token("bar", Token.Type.Identifier),
+                new Token("else", Token.Type.Keyword),
+                new Token("baz", Token.Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new IfExpression(new VarExpression("foo"), new VarExpression("bar"), new VarExpression("baz")), parser.parseExpressionWhole());
+    }
 }

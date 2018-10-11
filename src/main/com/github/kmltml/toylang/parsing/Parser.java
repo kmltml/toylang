@@ -50,6 +50,19 @@ public class Parser {
                     case True:
                     case False:
                         return new BoolExpression(token);
+                    case If:
+                        consume(Token.Type.LParen);
+                        Expression cond = parseExpression(0);
+                        consume(Token.Type.RParen);
+                        Expression ifTrue = parseExpression(0);
+                        Expression ifFalse = null;
+                        if (peek().matchesKeyword(Keyword.Else)) {
+                            pop();
+                            ifFalse = parseExpression(0);
+                        }
+                        return new IfExpression(cond, ifTrue, ifFalse);
+                    default:
+                        throw ParsingException.unexpectedToken("Expression Start", token);
                 }
             case LParen:
                 Expression expr = parseExpression(0);

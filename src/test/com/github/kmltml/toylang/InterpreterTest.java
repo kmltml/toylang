@@ -83,4 +83,13 @@ public class InterpreterTest {
     public void interpretExpression_prefixNegativeParen() throws Exception {
         assertEquals(new NumberValue(50), new Interpreter().interpretExpression("-(-20 + -30)"));
     }
+
+    @Test
+    public void interpretExpression_ifThenElse() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("x", new NumberValue(-10));
+        assertEquals(new NumberValue(10), interpreter.interpretExpression("if(x < 0) -x else x"));
+        interpreter.addBinding("x", new NumberValue(10));
+        assertEquals(new NumberValue(10), interpreter.interpretExpression("if(x < 0) -x else x"));
+    }
 }

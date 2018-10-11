@@ -198,4 +198,12 @@ public class ExpressionTest {
         assertEquals(BoolValue.True, new PrefixExpression(PrefixOp.Not, new BoolExpression(false)).evaluate(new Scope()));
         assertEquals(BoolValue.False, new PrefixExpression(PrefixOp.Not, new BoolExpression(true)).evaluate(new Scope()));
     }
+
+    @Test
+    public void evaluate_ifThenElse() throws Exception {
+        assertEquals(new NumberValue(1),
+                new IfExpression(new BoolExpression(true), new NumberExpression(1), new NumberExpression(0)).evaluate(new Scope()));
+        assertEquals(new NumberValue(0),
+                new IfExpression(new BoolExpression(false), new NumberExpression(1), new NumberExpression(0)).evaluate(new Scope()));
+    }
 }
