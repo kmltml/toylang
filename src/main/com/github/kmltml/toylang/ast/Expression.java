@@ -4,8 +4,11 @@ import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Value;
 
-public interface Expression {
+public abstract class Expression {
 
-    Value evaluate(Scope scope) throws EvaluationException;
+    public abstract Value<?, ?> evaluate(Scope scope) throws EvaluationException;
 
+    public void assign(Value<?, ?> v, Scope scope) throws EvaluationException {
+        throw EvaluationException.cantAssign(this);
+    }
 }

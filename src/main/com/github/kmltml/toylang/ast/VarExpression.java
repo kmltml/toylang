@@ -7,7 +7,7 @@ import com.github.kmltml.toylang.runtime.Value;
 
 import java.util.Objects;
 
-public class VarExpression implements Expression {
+public class VarExpression extends Expression {
 
     private String name;
 
@@ -23,8 +23,17 @@ public class VarExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(Scope scope) throws EvaluationException {
+    public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
         return scope.getValue(name).orElseThrow(() -> EvaluationException.unknownVariable(name));
+    }
+
+    @Override
+    public void assign(Value<?, ?> v, Scope scope) throws EvaluationException {
+        if (scope.isDefined(name)) {
+            scope.updateValue(name, v);
+        } else {
+            throw EvaluationException.unknownVariable(name);
+        }
     }
 
     @Override

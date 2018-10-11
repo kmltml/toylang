@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class Scope {
 
-    private Map<String, Value> bindings;
+    private Map<String, Value<?, ?>> bindings;
     private Optional<Scope> parent;
 
     public Scope(Scope parent) {
@@ -26,7 +26,20 @@ public class Scope {
         }
     }
 
-    public void putValue(String name, Value value) {
+    public void putValue(String name, Value<?, ?> value) {
         bindings.put(name, value);
     }
+
+    public boolean isDefined(String name) {
+        return bindings.containsKey(name) || parent.map(p -> p.isDefined(name)).orElse(false);
+    }
+
+    public void updateValue(String name, Value<?, ?> value) {
+        if (bindings.containsKey(name)) {
+            bindings.put(name, value);
+        } else {
+            parent.ifPresent(p -> p.updateValue(name, value));
+        }
+    }
+
 }

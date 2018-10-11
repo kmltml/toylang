@@ -8,7 +8,7 @@ import com.github.kmltml.toylang.runtime.value.StringValue;
 
 import java.util.Objects;
 
-public class StringExpression implements Expression {
+public class StringExpression extends Expression {
 
     private String value;
 
@@ -41,7 +41,7 @@ public class StringExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(Scope scope) throws EvaluationException {
+    public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
         return new StringValue(value);
     }
 }

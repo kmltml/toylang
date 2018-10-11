@@ -9,7 +9,7 @@ import com.github.kmltml.toylang.runtime.value.NumberValue;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class NumberExpression implements Expression {
+public class NumberExpression extends Expression {
 
     private BigDecimal value;
 
@@ -23,8 +23,12 @@ public class NumberExpression implements Expression {
         value = token.numberValue();
     }
 
+    public NumberExpression(int i) {
+        this(BigDecimal.valueOf(i));
+    }
+
     @Override
-    public Value evaluate(Scope scope) throws EvaluationException {
+    public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
         return new NumberValue(value);
     }
 

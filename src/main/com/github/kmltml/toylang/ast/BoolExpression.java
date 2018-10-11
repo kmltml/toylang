@@ -8,7 +8,7 @@ import com.github.kmltml.toylang.runtime.value.BoolValue;
 
 import java.util.Objects;
 
-public class BoolExpression implements Expression {
+public class BoolExpression extends Expression {
 
     private boolean value;
 
@@ -24,8 +24,8 @@ public class BoolExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(Scope scope) throws EvaluationException {
-        return new BoolValue(value);
+    public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
+        return BoolValue.of(value);
     }
 
     @Override

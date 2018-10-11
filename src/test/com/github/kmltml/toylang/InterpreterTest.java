@@ -3,6 +3,7 @@ package com.github.kmltml.toylang;
 import com.github.kmltml.toylang.runtime.value.BoolValue;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
 import com.github.kmltml.toylang.runtime.value.StringValue;
+import com.github.kmltml.toylang.runtime.value.UnitValue;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -34,7 +35,32 @@ public class InterpreterTest {
     @Test
     public void interpretExpression_boolLiterals() throws Exception {
         Interpreter interpreter = new Interpreter();
-        assertEquals(new BoolValue(true), interpreter.interpretExpression("true"));
-        assertEquals(new BoolValue(false), interpreter.interpretExpression("false"));
+        assertEquals(BoolValue.True, interpreter.interpretExpression("true"));
+        assertEquals(BoolValue.False, interpreter.interpretExpression("false"));
+    }
+
+    @Test
+    public void interpretExpression_numberInfix() throws Exception {
+        assertEquals(new NumberValue(73), new Interpreter().interpretExpression("2 + 3 * 5 ** 2 - 8 / 2"));
+    }
+
+    @Test
+    public void interpretExpression_numberComparison() throws Exception {
+        assertEquals(BoolValue.True, new Interpreter().interpretExpression("2 + 2 < 20 / 4"));
+        assertEquals(BoolValue.True, new Interpreter().interpretExpression("2 + 2 == 20 / 5"));
+    }
+
+    @Test
+    public void interpretExpression_stringInfix() throws Exception {
+        assertEquals(new StringValue("nananananananananananananana batman"),
+                new Interpreter().interpretExpression("\"na\" * 14 + \" batman\""));
+    }
+
+    @Test
+    public void interpretExpression_assign() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("foo", new NumberValue(10));
+        assertEquals(UnitValue.instance, interpreter.interpretExpression("foo = foo + 10"));
+        assertEquals(new NumberValue(20), interpreter.interpretExpression("foo"));
     }
 }

@@ -1,13 +1,12 @@
 package com.github.kmltml.toylang.runtime.value;
 
-import com.github.kmltml.toylang.runtime.Type;
 import com.github.kmltml.toylang.runtime.Value;
 import com.github.kmltml.toylang.runtime.type.NumberType;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class NumberValue extends Value {
+public class NumberValue extends Value<NumberValue, NumberType> {
 
     private BigDecimal value;
 
@@ -24,8 +23,13 @@ public class NumberValue extends Value {
     }
 
     @Override
-    public Type getType() {
+    public NumberType getType() {
         return NumberType.instance;
+    }
+
+    @Override
+    public NumberValue self() {
+        return this;
     }
 
     @Override
@@ -44,5 +48,9 @@ public class NumberValue extends Value {
     @Override
     public String toString() {
         return String.format("Number(%s)", value);
+    }
+
+    public BigDecimal getValue() {
+        return value;
     }
 }

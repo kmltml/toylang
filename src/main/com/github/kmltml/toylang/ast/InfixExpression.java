@@ -4,10 +4,11 @@ import com.github.kmltml.toylang.parsing.InfixOp;
 import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Value;
+import com.github.kmltml.toylang.runtime.value.UnitValue;
 
 import java.util.Objects;
 
-public class InfixExpression implements Expression {
+public class InfixExpression extends Expression {
 
     private final InfixOp op;
     private final Expression left;
@@ -20,8 +21,13 @@ public class InfixExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(Scope scope) throws EvaluationException {
-        return null;
+    public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
+        if(op == InfixOp.Assign) {
+            left.assign(right.evaluate(scope), scope);
+            return UnitValue.instance;
+        }
+        Value lval = left.evaluate(scope);
+        return lval.evalInfixOperator(op, right, scope);
     }
 
     @Override

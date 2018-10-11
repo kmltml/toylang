@@ -1,12 +1,11 @@
 package com.github.kmltml.toylang.runtime.value;
 
-import com.github.kmltml.toylang.runtime.Type;
 import com.github.kmltml.toylang.runtime.Value;
 import com.github.kmltml.toylang.runtime.type.StringType;
 
 import java.util.Objects;
 
-public class StringValue extends Value {
+public class StringValue extends Value<StringValue, StringType> {
 
     private String value;
 
@@ -15,8 +14,13 @@ public class StringValue extends Value {
     }
 
     @Override
-    public Type getType() {
+    public StringType getType() {
         return StringType.instance;
+    }
+
+    @Override
+    public StringValue self() {
+        return this;
     }
 
     @Override
@@ -30,5 +34,9 @@ public class StringValue extends Value {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    public String getValue() {
+        return value;
     }
 }
