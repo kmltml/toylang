@@ -20,4 +20,9 @@ public class UnitValue extends Value<UnitValue, UnitType> {
     public UnitValue self() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Unit()";
+    }
 }

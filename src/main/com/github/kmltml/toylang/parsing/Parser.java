@@ -64,6 +64,14 @@ public class Parser {
                             ifFalse = parseExpression(0);
                         }
                         return new IfExpression(cond, ifTrue, ifFalse);
+                    case Var:
+                        Token name = consume(Token.Type.Identifier);
+                        Token op = consume(Token.Type.Operator);
+                        if(op.infixOpValue() != InfixOp.Assign) {
+                            throw ParsingException.unexpectedToken("=", op);
+                        }
+                        Expression right = parseExpression(0);
+                        return new VarDefExpression(name.identifierName(), right);
                     default:
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }

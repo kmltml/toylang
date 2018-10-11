@@ -103,6 +103,14 @@ public class TokenizerTest {
     }
 
     @Test
+    public void tokenize_miscKeywords() throws Exception {
+        assertArrayEquals(new Token[] {
+                new Token("var", Type.Keyword),
+                Token.EOF
+        }, new Tokenizer("var").tokenize());
+    }
+
+    @Test
     public void tokenize_controlFlowKeywords() throws Exception {
         assertArrayEquals(new Token[]{
                 new Token("if", Type.Keyword),

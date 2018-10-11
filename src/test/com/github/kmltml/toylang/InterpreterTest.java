@@ -100,4 +100,10 @@ public class InterpreterTest {
         assertEquals(new NumberValue(40), interpreter.interpretExpression("{ foo = foo + 10; foo * 2; }"));
         assertEquals(new NumberValue(20), interpreter.interpretExpression("foo"));
     }
+
+    @Test
+    public void interpretExpression_blockWithVars() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        assertEquals(new NumberValue(60), interpreter.interpretExpression("{ var x = 10; x = x + 20; var y = x * 2; var x = true; if(x) y else y * 2; }"));
+    }
 }

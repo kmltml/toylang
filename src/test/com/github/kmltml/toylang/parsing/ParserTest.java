@@ -250,4 +250,16 @@ public class ParserTest {
                 new VarExpression("b")
         )), parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_varDef() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("var", Type.Keyword),
+                new Token("foo", Type.Identifier),
+                new Token("=", Type.Operator),
+                new Token("42", Type.Number),
+                Token.EOF
+        });
+        assertEquals(new VarDefExpression("foo", new NumberExpression(42)), parser.parseExpressionWhole());
+    }
 }

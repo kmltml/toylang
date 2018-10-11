@@ -224,4 +224,11 @@ public class ExpressionTest {
     public void evaluate_emptyBlock() throws Exception {
         assertEquals(UnitValue.instance, new BlockExpression(Collections.emptyList()).evaluate(new Scope()));
     }
+
+    @Test
+    public void evaluate_varDef() throws Exception {
+        Scope scope = new Scope();
+        assertEquals(UnitValue.instance, new VarDefExpression("foo", new NumberExpression(42)).evaluate(scope));
+        assertEquals(new NumberValue(42), scope.getValue("foo").get());
+    }
 }
