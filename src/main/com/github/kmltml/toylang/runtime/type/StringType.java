@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.runtime.type;
 
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Type;
@@ -34,5 +35,10 @@ public class StringType extends Type<StringType, StringValue> {
             default:
                 throw EvaluationException.unsupportedOperator(this, op);
         }
+    }
+
+    @Override
+    public Value<?, ?> evalPrefixOperator(StringValue self, PrefixOp op, Scope scope) throws EvaluationException {
+        throw EvaluationException.unsupportedOperator(this, op);
     }
 }

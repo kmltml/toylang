@@ -51,6 +51,13 @@ public class Parser {
                     case False:
                         return new BoolExpression(token);
                 }
+            case Operator:
+                if (PrefixOp.isPrefixOp(token.getSource())) {
+                    PrefixOp op = token.prefixOpValue();
+                    return new PrefixExpression(op, parseExpression(op.getPrecedence()));
+                } else {
+                    throw ParsingException.unexpectedToken("Expression Start", token);
+                }
             default:
                 throw ParsingException.unexpectedToken("Expression Start", token);
         }

@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.runtime.type;
 
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Type;
@@ -55,6 +56,20 @@ public class NumberType extends Type<NumberType, NumberValue> {
                 return BoolValue.of(self.getValue().compareTo(right.evaluate(scope).requireNumber().getValue()) <= 0);
             case GreaterEq:
                 return BoolValue.of(self.getValue().compareTo(right.evaluate(scope).requireNumber().getValue()) >= 0);
+            default:
+                throw EvaluationException.unsupportedOperator(this, op);
+        }
+    }
+
+    @Override
+    public Value<?, ?> evalPrefixOperator(NumberValue self, PrefixOp op, Scope scope) throws EvaluationException {
+        switch (op) {
+            case BitNegation:
+                return new NumberValue(~self.getValue().intValue());
+            case Negative:
+                return new NumberValue(self.getValue().negate());
+            case Positive:
+                return self;
             default:
                 throw EvaluationException.unsupportedOperator(this, op);
         }

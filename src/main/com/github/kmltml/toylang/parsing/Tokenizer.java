@@ -1,12 +1,33 @@
 package com.github.kmltml.toylang.parsing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Tokenizer {
 
     private String source;
     private int cursor;
+
+    private static Set<String> operatorPrefixes = new HashSet<>();
+    private static Set<String> operatorNames = new HashSet<>();
+    static {
+        for (InfixOp op : InfixOp.values()) {
+            String name = op.getName();
+            operatorNames.add(name);
+            for (int i = 1; i <= name.length(); i++) {
+                operatorPrefixes.add(name.substring(0, i));
+            }
+        }
+        for (PrefixOp op : PrefixOp.values()) {
+            String name = op.getName();
+            operatorNames.add(name);
+            for (int i = 1; i <= name.length(); i++) {
+                operatorPrefixes.add(name.substring(0, i));
+            }
+        }
+    }
 
     public Tokenizer(String source) {
         this.source = source;
@@ -59,12 +80,12 @@ public class Tokenizer {
             } else {
                 type = Token.Type.Identifier;
             }
-        } else if (InfixOp.isOperatorPrefix(String.valueOf(c))) {
+        } else if (operatorPrefixes.contains(String.valueOf(c))) {
             type = Token.Type.Operator;
             do {
                 cursor++;
-            } while (!isAtEnd() && InfixOp.isOperatorPrefix(source.substring(start, cursor)));
-            while (cursor >= start && !InfixOp.isOperator(source.substring(start, cursor))) {
+            } while (!isAtEnd() && operatorPrefixes.contains(source.substring(start, cursor)));
+            while (cursor >= start && !operatorNames.contains(source.substring(start, cursor))) {
                 cursor--;
             }
             if (cursor == start) {

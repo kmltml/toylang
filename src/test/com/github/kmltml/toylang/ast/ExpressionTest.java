@@ -1,6 +1,7 @@
 package com.github.kmltml.toylang.ast;
 
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.value.BoolValue;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
@@ -175,5 +176,26 @@ public class ExpressionTest {
         scope.putValue("foo", new NumberValue(10));
         assertEquals(UnitValue.instance, new InfixExpression(InfixOp.Assign, new VarExpression("foo"), new NumberExpression(20)).evaluate(scope));
         assertEquals(new NumberValue(20), scope.getValue("foo").get());
+    }
+
+    @Test
+    public void evaluate_prefixNumberPositive() throws Exception {
+        assertEquals(new NumberValue(42), new PrefixExpression(PrefixOp.Positive, new NumberExpression(42)).evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_prefixNumberNegative() throws Exception {
+        assertEquals(new NumberValue(-42), new PrefixExpression(PrefixOp.Negative, new NumberExpression(42)).evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_prefixNumberBitNegation() throws Exception {
+        assertEquals(new NumberValue(~42), new PrefixExpression(PrefixOp.BitNegation, new NumberExpression(42)).evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_prefixBooleanNegation() throws Exception {
+        assertEquals(BoolValue.True, new PrefixExpression(PrefixOp.Not, new BoolExpression(false)).evaluate(new Scope()));
+        assertEquals(BoolValue.False, new PrefixExpression(PrefixOp.Not, new BoolExpression(true)).evaluate(new Scope()));
     }
 }

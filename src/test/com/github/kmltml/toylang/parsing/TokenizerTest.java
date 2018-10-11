@@ -113,4 +113,15 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("+**= <=").tokenize());
     }
+
+    @Test
+    public void tokenize_prefixOperators() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("+", Type.Operator),
+                new Token("-", Type.Operator),
+                new Token("!", Type.Operator),
+                new Token("~", Type.Operator),
+                Token.EOF
+        }, new Tokenizer("+ - ! ~").tokenize());
+    }
 }

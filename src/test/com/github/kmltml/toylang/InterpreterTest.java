@@ -63,4 +63,14 @@ public class InterpreterTest {
         assertEquals(UnitValue.instance, interpreter.interpretExpression("foo = foo + 10"));
         assertEquals(new NumberValue(20), interpreter.interpretExpression("foo"));
     }
+
+    @Test
+    public void interpretExpression_prefixNot() throws Exception {
+        assertEquals(BoolValue.True, new Interpreter().interpretExpression("!false"));
+    }
+
+    @Test
+    public void interpretExpression_prefixNegative() throws Exception {
+        assertEquals(new NumberValue(-50), new Interpreter().interpretExpression("-20 + -30"));
+    }
 }

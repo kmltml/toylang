@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.runtime.type;
 
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.EvaluationException;
 import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Type;
@@ -27,6 +28,16 @@ public class BoolType extends Type<BoolType, BoolValue> {
                 return BoolValue.of(self.getValue() == right.evaluate(scope).requireBool().getValue());
             case Neq:
                 return BoolValue.of(self.getValue() != right.evaluate(scope).requireBool().getValue());
+            default:
+                throw EvaluationException.unsupportedOperator(this, op);
+        }
+    }
+
+    @Override
+    public Value<?, ?> evalPrefixOperator(BoolValue self, PrefixOp op, Scope scope) throws EvaluationException {
+        switch (op) {
+            case Not:
+                return BoolValue.of(!self.getValue());
             default:
                 throw EvaluationException.unsupportedOperator(this, op);
         }

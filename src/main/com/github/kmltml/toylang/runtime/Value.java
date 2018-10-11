@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.runtime;
 
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.type.BoolType;
 import com.github.kmltml.toylang.runtime.type.NumberType;
 import com.github.kmltml.toylang.runtime.type.StringType;
@@ -43,4 +44,7 @@ public abstract class Value<Self extends Value<Self, T>, T extends Type<T, Self>
         return getType().evalInfixOperator(self(), op, right, scope);
     }
 
+    public Value<?, ?> evalPrefixOperator(PrefixOp op, Scope scope) throws EvaluationException {
+        return getType().evalPrefixOperator(self(), op, scope);
+    }
 }

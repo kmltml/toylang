@@ -1,9 +1,7 @@
 package com.github.kmltml.toylang.parsing;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public enum InfixOp {
 
@@ -15,13 +13,9 @@ public enum InfixOp {
     private final boolean leftAssoc;
 
     private static Map<String, InfixOp> opsByName = new HashMap<>();
-    private static Set<String> opPrefixes = new HashSet<>();
     static {
         for (InfixOp op : values()) {
             opsByName.put(op.name, op);
-            for (int i = 1; i <= op.name.length(); i++) {
-                opPrefixes.add(op.name.substring(0, i));
-            }
         }
     }
 
@@ -37,10 +31,6 @@ public enum InfixOp {
 
     public static boolean isOperator(String src) {
         return opsByName.containsKey(src);
-    }
-
-    public static boolean isOperatorPrefix(String src) {
-        return opPrefixes.contains(src);
     }
 
     public String getName() {

@@ -15,6 +15,10 @@ public class Token {
         this.type = type;
     }
 
+    public String getSource() {
+        return source;
+    }
+
     public enum Type {
         Eof, Identifier, Number, Keyword, String, Operator
     }
@@ -99,6 +103,11 @@ public class Token {
 
     public InfixOp infixOpValue() {
         return InfixOp.fromSource(source);
+    }
+
+
+    public PrefixOp prefixOpValue() {
+        return PrefixOp.fromSource(source);
     }
 
 }

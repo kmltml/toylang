@@ -2,6 +2,7 @@ package com.github.kmltml.toylang.runtime;
 
 import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
+import com.github.kmltml.toylang.parsing.PrefixOp;
 
 public class EvaluationException extends Exception {
 
@@ -14,7 +15,11 @@ public class EvaluationException extends Exception {
     }
 
     public static EvaluationException unsupportedOperator(Type<?, ?> type, InfixOp op) {
-        return new EvaluationException(String.format("Value of type %s does not support the operator %s", type, op.getName()));
+        return new EvaluationException(String.format("Value of type %s does not support the infix operator %s", type, op.getName()));
+    }
+
+    public static EvaluationException unsupportedOperator(Type<?, ?> type, PrefixOp op) {
+        return new EvaluationException(String.format("Value of type %s does not support the prefix operator %s", type, op.getName()));
     }
 
     public static EvaluationException wrongType(Type<?, ?> required, Type<?, ?> actual) {

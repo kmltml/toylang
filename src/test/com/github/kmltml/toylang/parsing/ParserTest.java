@@ -126,4 +126,70 @@ public class ParserTest {
                         new InfixExpression(InfixOp.Times, new NumberExpression(BigDecimal.valueOf(2)), new NumberExpression(BigDecimal.valueOf(3)))),
                 parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_prefixOperators() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("+", Token.Type.Operator),
+                new Token("-", Token.Type.Operator),
+                new Token("~", Token.Type.Operator),
+                new Token("!", Token.Type.Operator),
+                new Token("foo", Token.Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new PrefixExpression(PrefixOp.Positive, new PrefixExpression(PrefixOp.Negative, new PrefixExpression(PrefixOp.BitNegation, new PrefixExpression(PrefixOp.Not, new VarExpression("foo"))))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_negativeExpPrecedence() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("-", Token.Type.Operator),
+                new Token("foo", Token.Type.Identifier),
+                new Token("**", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(new PrefixExpression(PrefixOp.Negative, new InfixExpression(InfixOp.Exp, new VarExpression("foo"), new NumberExpression(2))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_negativeTimesPrecedence() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("-", Token.Type.Operator),
+                new Token("foo", Token.Type.Identifier),
+                new Token("*", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(new PrefixExpression(PrefixOp.Negative, new InfixExpression(InfixOp.Times, new VarExpression("foo"), new NumberExpression(2))),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_negativePlusPrecedence() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("-", Token.Type.Operator),
+                new Token("foo", Token.Type.Identifier),
+                new Token("+", Token.Type.Operator),
+                new Token("2", Token.Type.Number),
+                Token.EOF
+        });
+        assertEquals(new InfixExpression(InfixOp.Plus, new PrefixExpression(PrefixOp.Negative, new VarExpression("foo")), new NumberExpression(2)),
+                parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_negationAndPrecedence() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("!", Token.Type.Operator),
+                new Token("a", Token.Type.Identifier),
+                new Token("&&", Token.Type.Operator),
+                new Token("a", Token.Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new InfixExpression(InfixOp.And, new PrefixExpression(PrefixOp.Not, new VarExpression("a")), new VarExpression("a")),
+                parser.parseExpressionWhole());
+    }
 }
