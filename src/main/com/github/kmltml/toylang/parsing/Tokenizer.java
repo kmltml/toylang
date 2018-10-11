@@ -50,10 +50,10 @@ public class Tokenizer {
         }
         final int start = cursor;
         char c = peek();
+        cursor++;
         Token.Type type;
         if (c == '"') {
             type = Token.Type.String;
-            cursor++;
             while (peek() != '"') {
                 if(peek() == '\\') {
                     cursor++;
@@ -71,7 +71,6 @@ public class Tokenizer {
                 cursor++;
             }
         } else if (Character.isJavaIdentifierStart(c)) {
-            cursor++;
             while (!isAtEnd() && Character.isJavaIdentifierPart(peek())) {
                 cursor++;
             }
@@ -82,15 +81,19 @@ public class Tokenizer {
             }
         } else if (operatorPrefixes.contains(String.valueOf(c))) {
             type = Token.Type.Operator;
-            do {
+            while (!isAtEnd() && operatorPrefixes.contains(source.substring(start, cursor))) {
                 cursor++;
-            } while (!isAtEnd() && operatorPrefixes.contains(source.substring(start, cursor)));
+            }
             while (cursor >= start && !operatorNames.contains(source.substring(start, cursor))) {
                 cursor--;
             }
             if (cursor == start) {
                 throw LexingException.invalidOperator(c);
             }
+        } else if (c == '(') {
+            type = Token.Type.LParen;
+        } else if (c == ')') {
+            type = Token.Type.RParen;
         } else {
             throw LexingException.invalidTokenStart(c);
         }

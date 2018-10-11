@@ -51,6 +51,10 @@ public class Parser {
                     case False:
                         return new BoolExpression(token);
                 }
+            case LParen:
+                Expression expr = parseExpression(0);
+                consume(Token.Type.RParen);
+                return expr;
             case Operator:
                 if (PrefixOp.isPrefixOp(token.getSource())) {
                     PrefixOp op = token.prefixOpValue();

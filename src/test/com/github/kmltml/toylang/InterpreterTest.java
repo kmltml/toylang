@@ -73,4 +73,14 @@ public class InterpreterTest {
     public void interpretExpression_prefixNegative() throws Exception {
         assertEquals(new NumberValue(-50), new Interpreter().interpretExpression("-20 + -30"));
     }
+
+    @Test
+    public void interpretExpression_prefixNotParen() throws Exception {
+        assertEquals(BoolValue.True, new Interpreter().interpretExpression("!(20 > 30)"));
+    }
+
+    @Test
+    public void interpretExpression_prefixNegativeParen() throws Exception {
+        assertEquals(new NumberValue(50), new Interpreter().interpretExpression("-(-20 + -30)"));
+    }
 }

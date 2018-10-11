@@ -124,4 +124,13 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer("+ - ! ~").tokenize());
     }
+
+    @Test
+    public void tokenize_parens() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("(", Type.LParen),
+                new Token(")", Type.RParen),
+                Token.EOF
+        }, new Tokenizer("(  )").tokenize());
+    }
 }

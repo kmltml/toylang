@@ -20,7 +20,8 @@ public class Token {
     }
 
     public enum Type {
-        Eof, Identifier, Number, Keyword, String, Operator
+        Eof, Identifier, Number, Keyword, String, Operator,
+        LParen, RParen
     }
 
     @Override

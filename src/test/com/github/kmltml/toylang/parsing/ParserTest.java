@@ -192,4 +192,15 @@ public class ParserTest {
         assertEquals(new InfixExpression(InfixOp.And, new PrefixExpression(PrefixOp.Not, new VarExpression("a")), new VarExpression("a")),
                 parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_parens() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("(", Token.Type.LParen),
+                new Token("foo", Token.Type.Identifier),
+                new Token(")", Token.Type.RParen),
+                Token.EOF
+        });
+        assertEquals(new VarExpression("foo"), parser.parseExpressionWhole());
+    }
 }
