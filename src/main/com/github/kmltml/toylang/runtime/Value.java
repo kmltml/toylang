@@ -4,9 +4,11 @@ import com.github.kmltml.toylang.ast.Expression;
 import com.github.kmltml.toylang.parsing.InfixOp;
 import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.type.BoolType;
+import com.github.kmltml.toylang.runtime.type.FunctionType;
 import com.github.kmltml.toylang.runtime.type.NumberType;
 import com.github.kmltml.toylang.runtime.type.StringType;
 import com.github.kmltml.toylang.runtime.value.BoolValue;
+import com.github.kmltml.toylang.runtime.value.FunctionValue;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
 import com.github.kmltml.toylang.runtime.value.StringValue;
 
@@ -37,6 +39,14 @@ public abstract class Value<Self extends Value<Self, T>, T extends Type<T, Self>
             return (StringValue) this;
         } else {
             throw EvaluationException.wrongType(StringType.instance, getType());
+        }
+    }
+
+    public FunctionValue requireFunction() throws EvaluationException {
+        if (getType() == FunctionType.instance) {
+            return (FunctionValue) this;
+        } else {
+            throw EvaluationException.wrongType(FunctionType.instance, getType());
         }
     }
 

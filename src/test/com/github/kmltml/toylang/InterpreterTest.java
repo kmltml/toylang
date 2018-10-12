@@ -1,10 +1,9 @@
 package com.github.kmltml.toylang;
 
-import com.github.kmltml.toylang.runtime.value.BoolValue;
-import com.github.kmltml.toylang.runtime.value.NumberValue;
-import com.github.kmltml.toylang.runtime.value.StringValue;
-import com.github.kmltml.toylang.runtime.value.UnitValue;
+import com.github.kmltml.toylang.runtime.value.*;
 import org.junit.Test;
+
+import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
 
@@ -120,5 +119,22 @@ public class InterpreterTest {
                 "  };\n" +
                 "  sum;\n" +
                 "}"));
+    }
+
+    @Test
+    public void interpretExpression_callBuiltinOneArg() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("length",
+                new BuiltinFunctionValue(args -> new NumberValue(args.get(0).requireString().getValue().length()), OptionalInt.of(1)));
+        assertEquals(new NumberValue(5), interpreter.interpretExpression("length(\"Hello\")"));
+    }
+
+    @Test
+    public void interpretExpression_callBuiltinTwoArgs() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.addBinding("startsWith",
+                new BuiltinFunctionValue(args -> BoolValue.of(args.get(1).requireString().getValue().startsWith(args.get(0).requireString().getValue())), OptionalInt.of(2)));
+        assertEquals(BoolValue.True, interpreter.interpretExpression("startsWith(\"foo\", \"foobar\")"));
+        assertEquals(BoolValue.False, interpreter.interpretExpression("startsWith(\"notfoo\", \"foobar\")"));
     }
 }

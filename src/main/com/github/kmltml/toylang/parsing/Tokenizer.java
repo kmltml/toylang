@@ -1,14 +1,21 @@
 package com.github.kmltml.toylang.parsing;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Tokenizer {
 
     private String source;
     private int cursor;
+
+    private static Map<Character, Token.Type> singleCharTokens = new HashMap<>();
+    static {
+        singleCharTokens.put('(', Token.Type.LParen);
+        singleCharTokens.put(')', Token.Type.RParen);
+        singleCharTokens.put('{', Token.Type.LBrace);
+        singleCharTokens.put('}', Token.Type.RBrace);
+        singleCharTokens.put(';', Token.Type.Semicolon);
+        singleCharTokens.put(',', Token.Type.Comma);
+    }
 
     private static Set<String> operatorPrefixes = new HashSet<>();
     private static Set<String> operatorNames = new HashSet<>();
@@ -90,16 +97,8 @@ public class Tokenizer {
             if (cursor == start) {
                 throw LexingException.invalidOperator(c);
             }
-        } else if (c == '(') {
-            type = Token.Type.LParen;
-        } else if (c == ')') {
-            type = Token.Type.RParen;
-        } else if (c == '{') {
-            type = Token.Type.LBrace;
-        } else if (c == '}') {
-            type = Token.Type.RBrace;
-        } else if (c == ';') {
-            type = Token.Type.Semicolon;
+        } else if (singleCharTokens.containsKey(c)) {
+            type = singleCharTokens.get(c);
         } else {
             throw LexingException.invalidTokenStart(c);
         }

@@ -3,15 +3,13 @@ package com.github.kmltml.toylang.ast;
 import com.github.kmltml.toylang.parsing.InfixOp;
 import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.Scope;
-import com.github.kmltml.toylang.runtime.value.BoolValue;
-import com.github.kmltml.toylang.runtime.value.NumberValue;
-import com.github.kmltml.toylang.runtime.value.StringValue;
-import com.github.kmltml.toylang.runtime.value.UnitValue;
+import com.github.kmltml.toylang.runtime.value.*;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
 
@@ -250,5 +248,13 @@ public class ExpressionTest {
                 new InfixExpression(InfixOp.Assign, new VarExpression("x"), new InfixExpression(InfixOp.Plus, new VarExpression("x"), new NumberExpression(1)))
         ).evaluate(scope));
         assertEquals(new NumberValue(10), scope.getValue("x").get());
+    }
+
+    @Test
+    public void evaluate_callBuiltin() throws Exception {
+        Scope scope = new Scope();
+        scope.putValue("foo", new BuiltinFunctionValue(args -> args.get(1), OptionalInt.of(2)));
+        assertEquals(new NumberValue(2), new CallExpression(new VarExpression("foo"),
+                Arrays.asList(new StringExpression("bar"), new NumberExpression(2))).evaluate(scope));
     }
 }

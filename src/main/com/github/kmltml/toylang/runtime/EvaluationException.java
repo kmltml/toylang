@@ -30,4 +30,7 @@ public class EvaluationException extends Exception {
         return new EvaluationException(String.format("Can't assign to %s", left));
     }
 
+    public static EvaluationException argumentCountMismatch(int expected, int actual) {
+        return new EvaluationException(String.format("Wrong number of arguments given, %d expected, but %d where given", expected, actual));
+    }
 }

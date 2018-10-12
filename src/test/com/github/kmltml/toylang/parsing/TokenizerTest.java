@@ -167,4 +167,12 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer(";").tokenize());
     }
+
+    @Test
+    public void tokenize_coma() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token(",", Type.Comma),
+                Token.EOF
+        }, new Tokenizer(",").tokenize());
+    }
 }

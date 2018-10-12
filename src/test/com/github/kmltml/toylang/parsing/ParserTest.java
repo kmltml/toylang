@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -274,5 +275,42 @@ public class ParserTest {
                 Token.EOF
         });
         assertEquals(new WhileExpression(new VarExpression("cond"), new VarExpression("body")), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_functionApplyEmpty() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Type.Identifier),
+                new Token("(", Type.LParen),
+                new Token(")", Type.RParen),
+                Token.EOF
+        });
+        assertEquals(new CallExpression(new VarExpression("foo"), Collections.emptyList()), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_functionApplyOneArg() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Type.Identifier),
+                new Token("(", Type.LParen),
+                new Token("bar", Type.Identifier),
+                new Token(")", Type.RParen),
+                Token.EOF
+        });
+        assertEquals(new CallExpression(new VarExpression("foo"), Collections.singletonList(new VarExpression("bar"))), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_functionApplyTwoArgs() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Type.Identifier),
+                new Token("(", Type.LParen),
+                new Token("bar", Type.Identifier),
+                new Token(",", Type.Comma),
+                new Token("baz", Type.Identifier),
+                new Token(")", Type.RParen),
+                Token.EOF
+        });
+        assertEquals(new CallExpression(new VarExpression("foo"), Arrays.asList(new VarExpression("bar"), new VarExpression("baz"))), parser.parseExpressionWhole());
     }
 }

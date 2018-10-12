@@ -111,10 +111,30 @@ public class Parser {
     public Expression parseExpression(int precedence) throws ParsingException {
         Expression left = parseAtomExpression();
         while (currentPrecedence() > precedence) {
-            Token token = consume(Token.Type.Operator);
-            InfixOp op = token.infixOpValue();
-            Expression right = parseExpression(op.isLeftAssoc() ? op.getPrecedence() : op.getPrecedence() - 1);
-            left = new InfixExpression(op, left, right);
+            Token token = pop();
+            if (token.matches(Token.Type.Operator)) {
+                InfixOp op = token.infixOpValue();
+                Expression right = parseExpression(op.isLeftAssoc() ? op.getPrecedence() : op.getPrecedence() - 1);
+                left = new InfixExpression(op, left, right);
+            } else if (token.matches(Token.Type.LParen)) {
+                List<Expression> args = new ArrayList<>();
+                if (peek().matches(Token.Type.RParen)) {
+                    pop();
+                } else {
+                    while (true) {
+                        args.add(parseExpression(0));
+                        Token t = pop();
+                        if (t.matches(Token.Type.RParen)) {
+                            break;
+                        } else if (!t.matches(Token.Type.Comma)) {
+                            throw ParsingException.unexpectedToken(Token.Type.RParen, t);
+                        }
+                    }
+                }
+                left = new CallExpression(left, args);
+            } else {
+                throw ParsingException.unexpectedToken("Expression postfix", token);
+            }
         }
         return left;
     }
@@ -123,6 +143,8 @@ public class Parser {
         Token token = peek();
         if (token.matches(Token.Type.Operator)) {
             return token.infixOpValue().getPrecedence();
+        } else if(token.matches(Token.Type.LParen)) {
+            return 10;
         } else {
             return 0;
         }
