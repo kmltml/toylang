@@ -312,4 +312,17 @@ public class ExpressionTest {
         assertEquals(new UserClass("Foo", Collections.singletonList(new VarDefExpression("foo", new NumberExpression(0)))),
                 scope.getUserClass("Foo"));
     }
+
+    @Test
+    public void evaluate_new() throws Exception {
+        Scope scope = new Scope();
+        UserClass foo = new UserClass("Foo", Collections.singletonList(
+                new VarDefExpression("x", new NumberExpression(10))
+        ));
+        scope.putUserClass(foo);
+        Scope classScope = new Scope(scope);
+        classScope.putValue("x", new NumberValue(10));
+        assertEquals(new NumberValue(10),
+                new MethodExpression(new NewExpression("Foo"), "x").evaluate(scope));
+    }
 }

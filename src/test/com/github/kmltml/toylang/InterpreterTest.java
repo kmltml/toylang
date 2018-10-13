@@ -214,4 +214,40 @@ public class InterpreterTest {
                 new VarDefExpression("y", new NumberExpression(20))
         )), interpreter.getScope().getUserClass("Foo"));
     }
+
+    @Test
+    public void interpretExpression_newClass() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpretExpression("class Vec {\n" +
+                "  var x = 0;\n" +
+                "  var y = 0;\n" +
+                "  \n" +
+                "  var init = (xx, yy) => {\n" +
+                "    x = xx;\n" +
+                "    y = yy;\n" +
+                "    this;\n" +
+                "  };\n" +
+                "  \n" +
+                "  var lengthSq = => x * x + y * y;\n" +
+                "    \n" +
+                "}");
+        assertEquals(new NumberValue(5), interpreter.interpretExpression("{\n" +
+                "  var v = new Vec.init(1, 2);\n" +
+                "  v.lengthSq();\n" +
+                "}"));
+    }
+
+    @Test
+    public void interpretExpression_classMutableProperty() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpretExpression("class Foo {\n" +
+                "  var x = 0;\n" +
+                "  var set = n => x = n;\n" +
+                "}");
+        assertEquals(new NumberValue(20), interpreter.interpretExpression("{\n" +
+                "  var foo = new Foo;\n" +
+                "  foo.set(20);\n" +
+                "  foo.x;\n" +
+                "}"));
+    }
 }

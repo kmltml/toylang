@@ -428,4 +428,14 @@ public class ParserTest {
                 new VarDefExpression("bar", new NumberExpression(2))
         )), parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_new() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("new", Type.Keyword),
+                new Token("Foo", Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new NewExpression("Foo"), parser.parseExpressionWhole());
+    }
 }

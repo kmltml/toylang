@@ -94,6 +94,10 @@ public class Parser {
                         List<Expression> body = parseBlockBody();
                         return new ClassDefExpression(name, body);
                     }
+                    case New: {
+                        String name = consume(Token.Type.Identifier).identifierName();
+                        return new NewExpression(name);
+                    }
                     default:
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }

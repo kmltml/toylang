@@ -37,4 +37,8 @@ public class EvaluationException extends Exception {
     public static EvaluationException methodNotFound(String method, Type<?, ?> type) {
         return new EvaluationException(String.format("No method '%s' defined on type %s", method, type));
     }
+
+    public static EvaluationException classNotFound(String name) {
+        return new EvaluationException(String.format("No class '%s' defined", name));
+    }
 }

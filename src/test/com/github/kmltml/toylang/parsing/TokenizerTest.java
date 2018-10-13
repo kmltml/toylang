@@ -115,8 +115,9 @@ public class TokenizerTest {
         assertArrayEquals(new Token[] {
                 new Token("var", Type.Keyword),
                 new Token("class", Type.Keyword),
+                new Token("new", Type.Keyword),
                 Token.EOF
-        }, new Tokenizer("var class").tokenize());
+        }, new Tokenizer("var class new").tokenize());
     }
 
     @Test
