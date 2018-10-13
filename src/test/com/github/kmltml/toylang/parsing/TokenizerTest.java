@@ -114,8 +114,9 @@ public class TokenizerTest {
     public void tokenize_miscKeywords() throws Exception {
         assertArrayEquals(new Token[] {
                 new Token("var", Type.Keyword),
+                new Token("class", Type.Keyword),
                 Token.EOF
-        }, new Tokenizer("var").tokenize());
+        }, new Tokenizer("var class").tokenize());
     }
 
     @Test

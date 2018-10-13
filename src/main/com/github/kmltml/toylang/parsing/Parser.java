@@ -88,6 +88,12 @@ public class Parser {
                         Expression body = parseExpression(0);
                         return new WhileExpression(cond, body);
                     }
+                    case Class: {
+                        String name = consume(Token.Type.Identifier).identifierName();
+                        consume(Token.Type.LBrace);
+                        List<Expression> body = parseBlockBody();
+                        return new ClassDefExpression(name, body);
+                    }
                     default:
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }
@@ -133,13 +139,7 @@ public class Parser {
                 return new LambdaExpression(Collections.emptyList(), body);
             }
             case LBrace:
-                List<Expression> statements = new ArrayList<>();
-                while (!peek().matches(Token.Type.RBrace)) {
-                    statements.add(parseExpression(0));
-                    consume(Token.Type.Semicolon);
-                }
-                consume(Token.Type.RBrace);
-                return new BlockExpression(statements);
+                return new BlockExpression(parseBlockBody());
             case Operator:
                 if (PrefixOp.isPrefixOp(token.getSource())) {
                     PrefixOp op = token.prefixOpValue();
@@ -150,6 +150,16 @@ public class Parser {
             default:
                 throw ParsingException.unexpectedToken("Expression Start", token);
         }
+    }
+
+    private List<Expression> parseBlockBody() throws ParsingException {
+        List<Expression> statements = new ArrayList<>();
+        while (!peek().matches(Token.Type.RBrace)) {
+            statements.add(parseExpression(0));
+            consume(Token.Type.Semicolon);
+        }
+        consume(Token.Type.RBrace);
+        return statements;
     }
 
     private String ensureVar(Expression expr) throws ParsingException {

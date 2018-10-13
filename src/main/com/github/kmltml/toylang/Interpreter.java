@@ -20,4 +20,7 @@ public class Interpreter {
         return expr.evaluate(scope);
     }
 
+    public Scope getScope() {
+        return scope;
+    }
 }

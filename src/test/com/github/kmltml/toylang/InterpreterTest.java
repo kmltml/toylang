@@ -1,8 +1,12 @@
 package com.github.kmltml.toylang;
 
+import com.github.kmltml.toylang.ast.NumberExpression;
+import com.github.kmltml.toylang.ast.VarDefExpression;
+import com.github.kmltml.toylang.runtime.UserClass;
 import com.github.kmltml.toylang.runtime.value.*;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
@@ -196,5 +200,18 @@ public class InterpreterTest {
     @Test
     public void interpretExpression_numberClamp() throws Exception {
         assertEquals(new NumberValue(10), new Interpreter().interpretExpression("50.clamp(3, 10)"));
+    }
+
+    @Test
+    public void interpretExpression_class() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        assertEquals(UnitValue.instance, interpreter.interpretExpression("class Foo {\n" +
+                "  var x = 10;\n" +
+                "  var y = 20;\n" +
+                "}"));
+        assertEquals(new UserClass("Foo", Arrays.asList(
+                new VarDefExpression("x", new NumberExpression(10)),
+                new VarDefExpression("y", new NumberExpression(20))
+        )), interpreter.getScope().getUserClass("Foo"));
     }
 }

@@ -3,6 +3,7 @@ package com.github.kmltml.toylang.ast;
 import com.github.kmltml.toylang.parsing.InfixOp;
 import com.github.kmltml.toylang.parsing.PrefixOp;
 import com.github.kmltml.toylang.runtime.Scope;
+import com.github.kmltml.toylang.runtime.UserClass;
 import com.github.kmltml.toylang.runtime.value.*;
 import org.junit.Test;
 
@@ -300,5 +301,15 @@ public class ExpressionTest {
     public void evaluate_methodStringLength() throws Exception {
         assertEquals(new NumberValue(6),
                 new MethodExpression(new StringExpression("foobar"), "length").evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_classDef() throws Exception {
+        Scope scope = new Scope();
+        assertEquals(UnitValue.instance,
+                new ClassDefExpression("Foo",
+                        Collections.singletonList(new VarDefExpression("foo", new NumberExpression(0)))).evaluate(scope));
+        assertEquals(new UserClass("Foo", Collections.singletonList(new VarDefExpression("foo", new NumberExpression(0)))),
+                scope.getUserClass("Foo"));
     }
 }

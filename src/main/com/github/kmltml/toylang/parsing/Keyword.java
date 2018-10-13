@@ -5,7 +5,7 @@ import java.util.Set;
 
 public enum Keyword {
 
-    True, False, If, Else, While, Var;
+    True, False, If, Else, While, Var, Class;
 
     private static Set<String> keywordNames = new HashSet<>();
     static {

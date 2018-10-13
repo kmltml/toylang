@@ -409,4 +409,23 @@ public class ParserTest {
                 Collections.singletonList(new VarExpression("baz"))),
             parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_classDef() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("class", Type.Keyword),
+                new Token("Foo", Type.Identifier),
+                new Token("{", Type.LBrace),
+                new Token("var", Type.Keyword),
+                new Token("bar", Type.Identifier),
+                new Token("=", Type.Operator),
+                new Token("2", Type.Number),
+                new Token(";", Type.Semicolon),
+                new Token("}", Type.RBrace),
+                Token.EOF
+        });
+        assertEquals(new ClassDefExpression("Foo", Arrays.asList(
+                new VarDefExpression("bar", new NumberExpression(2))
+        )), parser.parseExpressionWhole());
+    }
 }

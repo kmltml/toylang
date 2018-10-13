@@ -7,6 +7,7 @@ import java.util.Optional;
 public class Scope {
 
     private Map<String, Value<?, ?>> bindings;
+    private Map<String, UserClass> classes = new HashMap<>();
     private Optional<Scope> parent;
 
     public Scope(Scope parent) {
@@ -40,6 +41,14 @@ public class Scope {
         } else {
             parent.ifPresent(p -> p.updateValue(name, value));
         }
+    }
+
+    public UserClass getUserClass(String name) {
+        return classes.get(name);
+    }
+
+    public void putUserClass(UserClass userClass) {
+        classes.put(userClass.getName(), userClass);
     }
 
 }
