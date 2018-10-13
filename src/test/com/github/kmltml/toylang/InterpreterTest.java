@@ -195,6 +195,6 @@ public class InterpreterTest {
 
     @Test
     public void interpretExpression_numberClamp() throws Exception {
-        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("(50).clamp(3, 10)"));
+        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("50.clamp(3, 10)"));
     }
 }

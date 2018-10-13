@@ -75,6 +75,14 @@ public class TokenizerTest {
         }, new Tokenizer("10 20").tokenize());
     }
 
+    @Test
+    public void tokenize_numberFinalDot() throws Exception {
+        assertArrayEquals(new Token[] {
+                new Token("10", Type.Number),
+                new Token(".", Type.Operator),
+                Token.EOF
+        }, new Tokenizer("10.").tokenize());
+    }
 
     @Test
     public void tokenize_identifier() throws Exception {

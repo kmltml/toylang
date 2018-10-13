@@ -77,6 +77,9 @@ public class Tokenizer {
                 }
                 cursor++;
             }
+            if (cursor != 0 && source.charAt(cursor - 1) == '.') {
+                cursor--;
+            }
         } else if (Character.isJavaIdentifierStart(c)) {
             while (!isAtEnd() && Character.isJavaIdentifierPart(peek())) {
                 cursor++;
