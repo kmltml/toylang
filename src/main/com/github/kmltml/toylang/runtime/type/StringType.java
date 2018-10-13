@@ -8,6 +8,7 @@ import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Type;
 import com.github.kmltml.toylang.runtime.Value;
 import com.github.kmltml.toylang.runtime.value.BoolValue;
+import com.github.kmltml.toylang.runtime.value.NumberValue;
 import com.github.kmltml.toylang.runtime.value.StringValue;
 
 public class StringType extends Type<StringType, StringValue> {
@@ -40,5 +41,15 @@ public class StringType extends Type<StringType, StringValue> {
     @Override
     public Value<?, ?> evalPrefixOperator(StringValue self, PrefixOp op, Scope scope) throws EvaluationException {
         throw EvaluationException.unsupportedOperator(this, op);
+    }
+
+    @Override
+    public Value<?, ?> getMethod(StringValue self, String name) throws EvaluationException {
+        switch (name) {
+            case "length":
+                return new NumberValue(self.getValue().length());
+            default:
+                throw EvaluationException.methodNotFound(name, this);
+        }
     }
 }

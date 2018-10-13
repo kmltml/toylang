@@ -42,4 +42,9 @@ public class BoolType extends Type<BoolType, BoolValue> {
                 throw EvaluationException.unsupportedOperator(this, op);
         }
     }
+
+    @Override
+    public Value<?, ?> getMethod(BoolValue self, String name) throws EvaluationException {
+        throw EvaluationException.methodNotFound(name, this);
+    }
 }

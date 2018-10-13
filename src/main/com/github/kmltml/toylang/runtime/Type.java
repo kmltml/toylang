@@ -10,4 +10,6 @@ public abstract class Type<Self extends Type<Self, V>, V extends Value<V, Self>>
 
     public abstract Value<?, ?> evalPrefixOperator(V self, PrefixOp op, Scope scope) throws EvaluationException;
 
+    public abstract Value<?, ?> getMethod(V self, String name) throws EvaluationException;
+
 }

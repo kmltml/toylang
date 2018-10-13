@@ -166,8 +166,13 @@ public class Parser {
             Token token = pop();
             if (token.matches(Token.Type.Operator)) {
                 InfixOp op = token.infixOpValue();
-                Expression right = parseExpression(op.isLeftAssoc() ? op.getPrecedence() : op.getPrecedence() - 1);
-                left = new InfixExpression(op, left, right);
+                if (op == InfixOp.Dot) {
+                    Token method = consume(Token.Type.Identifier);
+                    left = new MethodExpression(left, method.identifierName());
+                } else {
+                    Expression right = parseExpression(op.isLeftAssoc() ? op.getPrecedence() : op.getPrecedence() - 1);
+                    left = new InfixExpression(op, left, right);
+                }
             } else if (token.matches(Token.Type.LParen)) {
                 List<Expression> args = new ArrayList<>();
                 if (peek().matches(Token.Type.RParen)) {

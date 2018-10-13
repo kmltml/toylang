@@ -26,4 +26,9 @@ public class UnitType extends Type<UnitType, UnitValue> {
     public Value<?, ?> evalPrefixOperator(UnitValue self, PrefixOp op, Scope scope) throws EvaluationException {
         throw EvaluationException.unsupportedOperator(this, op);
     }
+
+    @Override
+    public Value<?, ?> getMethod(UnitValue self, String name) throws EvaluationException {
+        throw EvaluationException.methodNotFound(name, this);
+    }
 }

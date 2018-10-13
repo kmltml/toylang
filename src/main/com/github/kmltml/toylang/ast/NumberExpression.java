@@ -27,6 +27,10 @@ public class NumberExpression extends Expression {
         this(BigDecimal.valueOf(i));
     }
 
+    public NumberExpression(String s) {
+        this(new BigDecimal(s));
+    }
+
     @Override
     public Value<?, ?> evaluate(Scope scope) throws EvaluationException {
         return new NumberValue(value);

@@ -382,5 +382,31 @@ public class ParserTest {
         assertEquals(new LambdaExpression(Collections.emptyList(), new VarExpression("x")), parser.parseExpressionWhole());
     }
 
+    @Test
+    public void parseExpression_method() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Type.Identifier),
+                new Token(".", Type.Operator),
+                new Token("bar", Type.Identifier),
+                Token.EOF
+        });
+        assertEquals(new MethodExpression(new VarExpression("foo"), "bar"), parser.parseExpressionWhole());
+    }
 
+    @Test
+    public void parseExpression_methodCall() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("foo", Type.Identifier),
+                new Token(".", Type.Operator),
+                new Token("bar", Type.Identifier),
+                new Token("(", Type.LParen),
+                new Token("baz", Type.Identifier),
+                new Token(")", Type.RParen),
+                Token.EOF
+        });
+        assertEquals(new CallExpression(
+                new MethodExpression(new VarExpression("foo"), "bar"),
+                Collections.singletonList(new VarExpression("baz"))),
+            parser.parseExpressionWhole());
+    }
 }

@@ -57,4 +57,8 @@ public abstract class Value<Self extends Value<Self, T>, T extends Type<T, Self>
     public Value<?, ?> evalPrefixOperator(PrefixOp op, Scope scope) throws EvaluationException {
         return getType().evalPrefixOperator(self(), op, scope);
     }
+
+    public Value<?, ?> getMethod(String name) throws EvaluationException {
+        return getType().getMethod(self(), name);
+    }
 }

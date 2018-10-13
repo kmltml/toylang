@@ -26,4 +26,9 @@ public class FunctionType extends Type<FunctionType, FunctionValue> {
     public Value<?, ?> evalPrefixOperator(FunctionValue self, PrefixOp op, Scope scope) throws EvaluationException {
         throw EvaluationException.unsupportedOperator(this, op);
     }
+
+    @Override
+    public Value<?, ?> getMethod(FunctionValue self, String name) throws EvaluationException {
+        throw EvaluationException.methodNotFound(name, this);
+    }
 }

@@ -33,4 +33,8 @@ public class EvaluationException extends Exception {
     public static EvaluationException argumentCountMismatch(int expected, int actual) {
         return new EvaluationException(String.format("Wrong number of arguments given, %d expected, but %d where given", expected, actual));
     }
+
+    public static EvaluationException methodNotFound(String method, Type<?, ?> type) {
+        return new EvaluationException(String.format("No method '%s' defined on type %s", method, type));
+    }
 }

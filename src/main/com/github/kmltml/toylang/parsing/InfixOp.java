@@ -5,8 +5,10 @@ import java.util.Map;
 
 public enum InfixOp {
 
-    Plus("+", 6, true), Minus("-", 6, true), Times("*", 7, true), Div("/", 7, true), Mod("%", 7, true), Or("||", 2, true), And("&&", 3, true), Assign("=", 1, false),
-    Exp("**", 8, false), Eq("==", 4, true), Neq("!=", 4, true), Less("<", 5, true), Greater(">", 5, true), LessEq("<=", 5, true), GreaterEq(">=", 5, true);
+    Plus("+", 6, true), Minus("-", 6, true), Times("*", 7, true), Div("/", 7, true), Mod("%", 7, true),
+    Or("||", 2, true), And("&&", 3, true), Assign("=", 1, false), Exp("**", 8, false), Eq("==", 4, true),
+    Neq("!=", 4, true), Less("<", 5, true), Greater(">", 5, true), LessEq("<=", 5, true),
+    GreaterEq(">=", 5, true), Dot(".", 11, true);
 
     private final String name;
     private final int precedence;

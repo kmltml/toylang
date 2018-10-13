@@ -187,4 +187,14 @@ public class InterpreterTest {
                 "  x;\n" +
                 "}"));
     }
+
+    @Test
+    public void interpretExpression_stringLength() throws Exception {
+        assertEquals(BoolValue.True, new Interpreter().interpretExpression("\"Hello, world!\".length == 13"));
+    }
+
+    @Test
+    public void interpretExpression_numberClamp() throws Exception {
+        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("(50).clamp(3, 10)"));
+    }
 }

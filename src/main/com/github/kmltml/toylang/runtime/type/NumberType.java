@@ -8,9 +8,11 @@ import com.github.kmltml.toylang.runtime.Scope;
 import com.github.kmltml.toylang.runtime.Type;
 import com.github.kmltml.toylang.runtime.Value;
 import com.github.kmltml.toylang.runtime.value.BoolValue;
+import com.github.kmltml.toylang.runtime.value.BuiltinFunctionValue;
 import com.github.kmltml.toylang.runtime.value.NumberValue;
 
 import java.math.BigDecimal;
+import java.util.OptionalInt;
 
 public class NumberType extends Type<NumberType, NumberValue> {
 
@@ -72,6 +74,22 @@ public class NumberType extends Type<NumberType, NumberValue> {
                 return self;
             default:
                 throw EvaluationException.unsupportedOperator(this, op);
+        }
+    }
+
+    @Override
+    public Value<?, ?> getMethod(NumberValue self, String name) throws EvaluationException {
+        switch (name) {
+            case "abs":
+                return new NumberValue(self.getValue().abs());
+            case "clamp":
+                return new BuiltinFunctionValue(args ->
+                    new NumberValue(self.getValue()
+                            .max(args.get(0).requireNumber().getValue())
+                            .min(args.get(1).requireNumber().getValue())),
+                    OptionalInt.of(2));
+            default:
+                throw EvaluationException.methodNotFound(name, this);
         }
     }
 }

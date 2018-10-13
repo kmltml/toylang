@@ -276,4 +276,29 @@ public class ExpressionTest {
                         Collections.singletonList(new NumberExpression(1))
                 ).evaluate(new Scope()));
     }
+
+    @Test
+    public void evaluate_methodNumberAbs() throws Exception {
+        assertEquals(new NumberValue(42),
+                new MethodExpression(new NumberExpression(-42), "abs").evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_methodNumberClamp() throws Exception {
+        assertEquals(new NumberValue("0.2"),
+                new CallExpression(new MethodExpression(new NumberExpression("0.2"), "clamp"),
+                        Arrays.asList(new NumberExpression("0.0"), new NumberExpression("1.0"))).evaluate(new Scope()));
+        assertEquals(new NumberValue("0.0"),
+                new CallExpression(new MethodExpression(new NumberExpression("-0.1"), "clamp"),
+                        Arrays.asList(new NumberExpression("0.0"), new NumberExpression("1.0"))).evaluate(new Scope()));
+        assertEquals(new NumberValue("1.0"),
+                new CallExpression(new MethodExpression(new NumberExpression("1.2"), "clamp"),
+                        Arrays.asList(new NumberExpression("0.0"), new NumberExpression("1.0"))).evaluate(new Scope()));
+    }
+
+    @Test
+    public void evaluate_methodStringLength() throws Exception {
+        assertEquals(new NumberValue(6),
+                new MethodExpression(new StringExpression("foobar"), "length").evaluate(new Scope()));
+    }
 }
