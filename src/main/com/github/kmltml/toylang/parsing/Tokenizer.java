@@ -21,18 +21,18 @@ public class Tokenizer {
     private static Set<String> operatorNames = new HashSet<>();
     static {
         for (InfixOp op : InfixOp.values()) {
-            String name = op.getName();
-            operatorNames.add(name);
-            for (int i = 1; i <= name.length(); i++) {
-                operatorPrefixes.add(name.substring(0, i));
-            }
+            addOperator(op.getName());
         }
         for (PrefixOp op : PrefixOp.values()) {
-            String name = op.getName();
-            operatorNames.add(name);
-            for (int i = 1; i <= name.length(); i++) {
-                operatorPrefixes.add(name.substring(0, i));
-            }
+            addOperator(op.getName());
+        }
+        addOperator("=>");
+    }
+
+    private static void addOperator(String name) {
+        operatorNames.add(name);
+        for (int i = 1; i <= name.length(); i++) {
+            operatorPrefixes.add(name.substring(0, i));
         }
     }
 
@@ -96,6 +96,9 @@ public class Tokenizer {
             }
             if (cursor == start) {
                 throw LexingException.invalidOperator(c);
+            }
+            if("=>".equals(source.substring(start, cursor))) {
+                type = Token.Type.Arrow;
             }
         } else if (singleCharTokens.containsKey(c)) {
             type = singleCharTokens.get(c);

@@ -175,4 +175,12 @@ public class TokenizerTest {
                 Token.EOF
         }, new Tokenizer(",").tokenize());
     }
+
+    @Test
+    public void tokenize_Arrow() throws Exception {
+        assertArrayEquals(new Token[]{
+                new Token("=>", Type.Arrow),
+                Token.EOF
+        }, new Tokenizer("=>").tokenize());
+    }
 }

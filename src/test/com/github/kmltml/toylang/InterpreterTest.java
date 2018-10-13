@@ -137,4 +137,54 @@ public class InterpreterTest {
         assertEquals(BoolValue.True, interpreter.interpretExpression("startsWith(\"foo\", \"foobar\")"));
         assertEquals(BoolValue.False, interpreter.interpretExpression("startsWith(\"notfoo\", \"foobar\")"));
     }
+
+    @Test
+    public void interpretExpression_simpleLambda() throws Exception {
+        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("(x => x)(10)"));
+    }
+
+    @Test
+    public void interpretExpression_binaryLambda() throws Exception {
+        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("((x, y) => y)(5, 10)"));
+    }
+
+    @Test
+    public void interpretExpression_closure() throws Exception {
+        assertEquals(new NumberValue(10), new Interpreter().interpretExpression("{\n" +
+                "  var a = 4;\n" +
+                "  x => a + x;\n" +
+                "}(6)"));
+    }
+
+    @Test
+    public void interpretExpression_mutableClosure() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpretExpression("var setAndGet = {\n" +
+                "  var i = 0;\n" +
+                "  x => {\n" +
+                "    var r = i;\n" +
+                "    i = x;\n" +
+                "    r;  \n" +
+                "  };\n" +
+                "}");
+        assertEquals(new NumberValue(0), interpreter.interpretExpression("setAndGet(10)"));
+        assertEquals(new NumberValue(10), interpreter.interpretExpression("setAndGet(20)"));
+    }
+
+    @Test
+    public void interpretExpression_nullaryClosure() throws Exception {
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpretExpression("var times = (n, f) => {\n" +
+                "  var i = 0;\n" +
+                "  while(i < n) {\n" +
+                "    f();\n" +
+                "    i = i + 1;\n" +
+                "  };\n" +
+                "}");
+        assertEquals(new NumberValue(16), interpreter.interpretExpression("{\n" +
+                "  var x = 1;\n" +
+                "  times(4, => x = x * 2);\n" +
+                "  x;\n" +
+                "}"));
+    }
 }

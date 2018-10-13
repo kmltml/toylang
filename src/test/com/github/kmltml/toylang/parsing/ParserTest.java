@@ -313,4 +313,74 @@ public class ParserTest {
         });
         assertEquals(new CallExpression(new VarExpression("foo"), Arrays.asList(new VarExpression("bar"), new VarExpression("baz"))), parser.parseExpressionWhole());
     }
+
+    @Test
+    public void parseExpression_lambdaExpressionUnaryNoParen() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("x", Type.Identifier),
+                new Token("=>", Type.Arrow),
+                new Token("x", Type.Identifier),
+                Token.EOF
+
+        });
+        assertEquals(new LambdaExpression(Collections.singletonList("x"), new VarExpression("x")), parser.parseExpressionWhole());
+    }
+
+
+    @Test
+    public void parseExpression_lambdaExpressionUnaryParen() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("(", Type.LParen),
+                new Token("x", Type.Identifier),
+                new Token(")", Type.RParen),
+                new Token("=>", Type.Arrow),
+                new Token("x", Type.Identifier),
+                Token.EOF
+
+        });
+        assertEquals(new LambdaExpression(Collections.singletonList("x"), new VarExpression("x")), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_lambdaExpressionBinary() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("(", Type.LParen),
+                new Token("x", Type.Identifier),
+                new Token(",", Type.Comma),
+                new Token("y", Type.Identifier),
+                new Token(")", Type.RParen),
+                new Token("=>", Type.Arrow),
+                new Token("y", Type.Identifier),
+                Token.EOF
+
+        });
+        assertEquals(new LambdaExpression(Arrays.asList("x", "y"), new VarExpression("y")), parser.parseExpressionWhole());
+    }
+
+    @Test
+    public void parseExpression_lambdaExpressionNullaryNoParen() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("=>", Type.Arrow),
+                new Token("x", Type.Identifier),
+                Token.EOF
+
+        });
+        assertEquals(new LambdaExpression(Collections.emptyList(), new VarExpression("x")), parser.parseExpressionWhole());
+    }
+
+
+    @Test
+    public void parseExpression_lambdaExpressionNullaryParen() throws Exception {
+        Parser parser = new Parser(new Token[]{
+                new Token("(", Type.LParen),
+                new Token(")", Type.RParen),
+                new Token("=>", Type.Arrow),
+                new Token("x", Type.Identifier),
+                Token.EOF
+
+        });
+        assertEquals(new LambdaExpression(Collections.emptyList(), new VarExpression("x")), parser.parseExpressionWhole());
+    }
+
+
 }

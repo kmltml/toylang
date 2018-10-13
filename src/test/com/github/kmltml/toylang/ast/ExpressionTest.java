@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
@@ -256,5 +257,23 @@ public class ExpressionTest {
         scope.putValue("foo", new BuiltinFunctionValue(args -> args.get(1), OptionalInt.of(2)));
         assertEquals(new NumberValue(2), new CallExpression(new VarExpression("foo"),
                 Arrays.asList(new StringExpression("bar"), new NumberExpression(2))).evaluate(scope));
+    }
+
+    @Test
+    public void evaluate_lambda() throws Exception {
+        Scope scope = new Scope();
+        List<String> argNames = Arrays.asList("x", "y");
+        VarExpression body = new VarExpression("y");
+        assertEquals(new LambdaValue(scope, argNames, body),
+                new LambdaExpression(argNames, body).evaluate(scope));
+    }
+
+    @Test
+    public void evaluate_callLambda() throws Exception {
+        assertEquals(new NumberValue(1),
+                new CallExpression(
+                        new LambdaExpression(Collections.singletonList("x"), new VarExpression("x")),
+                        Collections.singletonList(new NumberExpression(1))
+                ).evaluate(new Scope()));
     }
 }

@@ -3,6 +3,7 @@ package com.github.kmltml.toylang.parsing;
 import com.github.kmltml.toylang.ast.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Parser {
@@ -47,7 +48,13 @@ public class Parser {
             case Number:
                 return new NumberExpression(token);
             case Identifier:
-                return new VarExpression(token);
+                if (peek().matches(Token.Type.Arrow)) {
+                    pop();
+                    Expression body = parseExpression(0);
+                    return new LambdaExpression(Collections.singletonList(token.identifierName()), body);
+                } else {
+                    return new VarExpression(token);
+                }
             case Keyword:
                 switch (token.keywordValue()) {
                     case True:
@@ -85,9 +92,46 @@ public class Parser {
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }
             case LParen:
+                if (peek().matches(Token.Type.RParen)) {
+                    pop();
+                    consume(Token.Type.Arrow);
+                    Expression body = parseExpression(0);
+                    return new LambdaExpression(Collections.emptyList(), body);
+                }
                 Expression expr = parseExpression(0);
-                consume(Token.Type.RParen);
-                return expr;
+                Token t = pop();
+                if(t.matches(Token.Type.RParen)) {
+                    if (peek().matches(Token.Type.Arrow)) {
+                        pop();
+                        String arg = ensureVar(expr);
+                        Expression body = parseExpression(0);
+                        return new LambdaExpression(Collections.singletonList(arg), body);
+                    } else {
+                        return expr;
+                    }
+                } else if (t.matches(Token.Type.Comma)) {
+                    List<String> args = new ArrayList<>();
+                    args.add(ensureVar(expr));
+                    while (true) {
+                        Token argToken = consume(Token.Type.Identifier);
+                        args.add(argToken.identifierName());
+                        Token sep = pop();
+                        if (sep.matches(Token.Type.RParen)) {
+                            break;
+                        } else if (!sep.matches(Token.Type.Comma)) {
+                            throw ParsingException.unexpectedToken(Token.Type.RParen, sep);
+                        }
+                    }
+                    consume(Token.Type.Arrow);
+                    Expression body = parseExpression(0);
+                    return new LambdaExpression(args, body);
+                } else {
+                    throw ParsingException.unexpectedToken(Token.Type.RParen, t);
+                }
+            case Arrow: {
+                Expression body = parseExpression(0);
+                return new LambdaExpression(Collections.emptyList(), body);
+            }
             case LBrace:
                 List<Expression> statements = new ArrayList<>();
                 while (!peek().matches(Token.Type.RBrace)) {
@@ -105,6 +149,14 @@ public class Parser {
                 }
             default:
                 throw ParsingException.unexpectedToken("Expression Start", token);
+        }
+    }
+
+    private String ensureVar(Expression expr) throws ParsingException {
+        if (expr instanceof VarExpression) {
+            return ((VarExpression) expr).getName();
+        } else {
+            throw ParsingException.notAValidLambdaArg(expr);
         }
     }
 
