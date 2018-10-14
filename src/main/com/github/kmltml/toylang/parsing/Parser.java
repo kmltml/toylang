@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class responsible for transforming token stream into {@link Expression} trees.
+ * Uses a combination of Pratt parsing for infix operators, and recursive descent parsing
+ * for everything else.
+ */
 public class Parser {
 
     private Token[] tokens;
@@ -20,19 +25,19 @@ public class Parser {
         return i >= tokens.length ? Token.EOF : tokens[i];
     }
 
-    public Token peek() {
+    private Token peek() {
         return peek(0);
     }
 
-    public Token peek(int lookahead) {
+    private Token peek(int lookahead) {
         return getToken(cursor + lookahead);
     }
 
-    public Token pop() {
+    private Token pop() {
         return getToken(cursor++);
     }
 
-    public Token consume(Token.Type type) throws ParsingException {
+    private Token consume(Token.Type type) throws ParsingException {
         Token token = pop();
         if (!token.matches(type)) {
             throw ParsingException.unexpectedToken(type, token);
@@ -40,7 +45,10 @@ public class Parser {
         return token;
     }
 
-    public Expression parseAtomExpression() throws ParsingException {
+    /**
+     * Parses an expression, that does not contain any infix operator applications
+     */
+    private Expression parseAtomExpression() throws ParsingException {
         Token token = pop();
         switch (token.getType()) {
             case String:
@@ -102,7 +110,9 @@ public class Parser {
                         throw ParsingException.unexpectedToken("Expression Start", token);
                 }
             case LParen:
+                // Could be a start of a lambda expression, or just a regular expression wrapped in parentheses
                 if (peek().matches(Token.Type.RParen)) {
+                    // Lambda without arguments, like `() => 10`
                     pop();
                     consume(Token.Type.Arrow);
                     Expression body = parseExpression(0);
@@ -112,6 +122,7 @@ public class Parser {
                 Token t = pop();
                 if(t.matches(Token.Type.RParen)) {
                     if (peek().matches(Token.Type.Arrow)) {
+                        // Lambda with single argument
                         pop();
                         String arg = ensureVar(expr);
                         Expression body = parseExpression(0);
@@ -120,6 +131,7 @@ public class Parser {
                         return expr;
                     }
                 } else if (t.matches(Token.Type.Comma)) {
+                    // Lambda with multiple arguments
                     List<String> args = new ArrayList<>();
                     args.add(ensureVar(expr));
                     while (true) {
@@ -145,6 +157,7 @@ public class Parser {
             case LBrace:
                 return new BlockExpression(parseBlockBody());
             case Operator:
+                // Prefix operator application
                 if (PrefixOp.isPrefixOp(token.getSource())) {
                     PrefixOp op = token.prefixOpValue();
                     return new PrefixExpression(op, parseExpression(op.getPrecedence()));
@@ -174,6 +187,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses an expression.
+     * @param precedence The precedence of the surrounding context. Precedence of 0 will parse all expressions.
+     * @return The parsed expression.
+     * @throws ParsingException Thrown on any syntax error.
+     */
     public Expression parseExpression(int precedence) throws ParsingException {
         Expression left = parseAtomExpression();
         while (currentPrecedence() > precedence) {
@@ -221,6 +240,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Parse an expression, ensuring that the whole input stream gets consumed.
+     * @return The parsed expression.
+     * @throws ParsingException Thrown on any syntax error.
+     */
     public Expression parseExpressionWhole() throws ParsingException {
         Expression expr = parseExpression(0);
         if (!isAtEnd()) {
@@ -229,6 +253,10 @@ public class Parser {
         return expr;
     }
 
+    /**
+     * Checks, if all input has been consumed.
+     * @return true, if all tokens have been consumed.
+     */
     public boolean isAtEnd() {
         return peek().matches(Token.Type.Eof);
     }

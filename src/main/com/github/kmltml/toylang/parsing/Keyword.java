@@ -3,6 +3,9 @@ package com.github.kmltml.toylang.parsing;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Reserved keywords.
+ */
 public enum Keyword {
 
     True, False, If, Else, While, Var, Class, New;

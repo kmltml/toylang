@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * A function call expression, represented in source by following the function expression with arguments, separated with
+ * comma, enclosed in round parentheses.
+ * The function expression must evaluate to a value of the type Function, which is then applied to the given arguments.
+ */
 public class CallExpression extends Expression {
 
     private Expression function;

@@ -7,6 +7,10 @@ import com.github.kmltml.toylang.runtime.Value;
 
 import java.util.Objects;
 
+/**
+ * A prefix operator application.
+ * The behavior of the operator depends on the type of the right-hand expression.
+ */
 public class PrefixExpression extends Expression {
 
     private PrefixOp op;

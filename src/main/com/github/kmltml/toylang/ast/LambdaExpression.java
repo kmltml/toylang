@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The function literal, creating a function with given argument names, and a body expression.
+ */
 public class LambdaExpression extends Expression {
 
     private List<String> args;

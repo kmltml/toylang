@@ -7,6 +7,11 @@ import com.github.kmltml.toylang.runtime.value.UnitValue;
 
 import java.util.Objects;
 
+/**
+ * A variable definition expression. It creates a new variable binding with given name
+ * (shadowing the previous one, if it already existed), and assigns to it the value of
+ * the given initializer expression.
+ */
 public class VarDefExpression extends Expression {
 
     private String name;

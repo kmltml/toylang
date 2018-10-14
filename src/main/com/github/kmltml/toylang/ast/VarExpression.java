@@ -7,6 +7,11 @@ import com.github.kmltml.toylang.runtime.Value;
 
 import java.util.Objects;
 
+/**
+ * An expression getting the value of a variable binding from the scope.
+ * When assigned to, it attempts to change the value of an existing binding in the current scope, or
+ * any of its parents, never creating new bindings.
+ */
 public class VarExpression extends Expression {
 
     private String name;

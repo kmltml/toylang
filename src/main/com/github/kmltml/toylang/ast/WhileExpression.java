@@ -7,6 +7,10 @@ import com.github.kmltml.toylang.runtime.value.UnitValue;
 
 import java.util.Objects;
 
+/**
+ * A while statement. It evaluates the condition expression, which has to be of type Bool, and then if it was true
+ * evaluates the body expression and repeats, until the condition expression evaluates to false.
+ */
 public class WhileExpression extends Expression {
 
     private Expression condition;

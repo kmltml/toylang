@@ -9,6 +9,9 @@ import com.github.kmltml.toylang.runtime.value.NumberValue;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * A number literal.
+ */
 public class NumberExpression extends Expression {
 
     private BigDecimal value;

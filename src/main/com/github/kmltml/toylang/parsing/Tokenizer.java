@@ -2,6 +2,10 @@ package com.github.kmltml.toylang.parsing;
 
 import java.util.*;
 
+/**
+ * Class responsible for lexing the source, that is splitting it tokens.
+ * This takes care of ignoring whitespace.
+ */
 public class Tokenizer {
 
     private String source;

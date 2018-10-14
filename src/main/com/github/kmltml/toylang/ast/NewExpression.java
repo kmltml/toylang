@@ -7,6 +7,9 @@ import com.github.kmltml.toylang.runtime.Value;
 
 import java.util.Objects;
 
+/**
+ * An expression, that creates a new object, given the name of the class.
+ */
 public class NewExpression extends Expression {
 
     private String name;

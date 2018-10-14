@@ -3,6 +3,9 @@ package com.github.kmltml.toylang.parsing;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * An atomic part of the source code, consisting of the source text and a token type.
+ */
 public class Token {
 
     public static final Token EOF = new Token("", Type.Eof);
@@ -15,13 +18,69 @@ public class Token {
         this.type = type;
     }
 
+    /**
+     * The text from source code that this token represents.
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * The type of a token
+     */
     public enum Type {
-        Eof, Identifier, Number, Keyword, String, Operator,
-        LParen, RParen, LBrace, RBrace, Semicolon, Comma, Arrow
+        /**
+         * End of file. A special token emitted once at the end of token stream
+         */
+        Eof,
+        /**
+         * An identifier, such as a variable name or a method name
+         */
+        Identifier,
+        /**
+         * A number, integral or with a decimal point
+         */
+        Number,
+        /**
+         * A keyword, as defined in the {@link Keyword} enum
+         */
+        Keyword,
+        /**
+         * A string literal, surrounded by double quotes ("")
+         */
+        String,
+        /**
+         * An operator, infix or prefix
+         */
+        Operator,
+        /**
+         * The left round paren '('
+         */
+        LParen,
+        /**
+         * The right round paren ')'
+         */
+        RParen,
+        /**
+         * The left curly brace '{'
+         */
+        LBrace,
+        /**
+         * The right curly brace '}'
+         */
+        RBrace,
+        /**
+         * The semicolon ';'
+         */
+        Semicolon,
+        /**
+         * The comma ','
+         */
+        Comma,
+        /**
+         * The lambda fat arrow '=>'
+         */
+        Arrow
     }
 
     @Override
@@ -47,14 +106,28 @@ public class Token {
         return Objects.hash(source, type);
     }
 
+    /**
+     * Checks, if the token matches the given type.
+     * @param t Expected token type.
+     * @return true, if this token's type is the same as the given one.
+     */
     public boolean matches(Type t) {
         return t == type;
     }
 
+    /**
+     * Checks, if the token is the given keyword.
+     * @param k The expected keyword.
+     * @return true, if this token is of type {@link Type#Keyword} and its keyword value matches the given one.
+     */
     public boolean matchesKeyword(Keyword k) {
         return type == Type.Keyword && keywordValue() == k;
     }
 
+    /**
+     * Returns the value of the string literal.
+     * Should only be called on tokens of type {@link Type#String}
+     */
     public String stringValue() {
         StringBuilder ret = new StringBuilder();
         int i = 0;
@@ -78,18 +151,34 @@ public class Token {
         return ret.toString();
     }
 
+    /**
+     * Returns the numeric value of this token.
+     * Should only be called on tokens of type {@link Type#Number}
+     */
     public BigDecimal numberValue() {
         return new BigDecimal(source);
     }
 
+    /**
+     * Returns the name of the identifier represented by this token.
+     * Should only be called on tokens of type {@link Type#Identifier}
+     */
     public String identifierName() {
         return source.trim();
     }
 
+    /**
+     * Returns the keyword represented by this token
+     * Should only be called on tokens of type {@link Type#Keyword}
+     */
     public Keyword keywordValue() {
         return Keyword.forSource(source);
     }
 
+    /**
+     * Returns the boolean value represented by this token.
+     * Should only be called on keywords 'true' and 'false'
+     */
     public boolean booleanValue() {
         Keyword key = keywordValue();
         switch (key) {
@@ -102,11 +191,18 @@ public class Token {
         }
     }
 
+    /**
+     * Returns the infix operator represented by this token.
+     * Should only be called on tokens of type {@link Type#Operator}
+     */
     public InfixOp infixOpValue() {
         return InfixOp.fromSource(source);
     }
 
-
+    /**
+     * Returns the prefix operator represented by this token.
+     * Should only be called on tokens of type {@link Type#Operator}
+     */
     public PrefixOp prefixOpValue() {
         return PrefixOp.fromSource(source);
     }

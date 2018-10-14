@@ -8,6 +8,13 @@ import com.github.kmltml.toylang.runtime.value.UnitValue;
 
 import java.util.Objects;
 
+/**
+ * An infix operator application. The value of this expression depends on the type of left expression, which is always
+ * evaluated. The right side is passed by-name (as an Expression instead of Value), to allow for
+ * short-circuiting operator behavior.
+ * The assignment operator is treated specially, as it always refers to the left-hand expression as an l-value, to assign
+ * the value of right expression to it.
+ */
 public class InfixExpression extends Expression {
 
     private final InfixOp op;

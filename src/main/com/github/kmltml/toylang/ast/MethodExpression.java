@@ -6,11 +6,20 @@ import com.github.kmltml.toylang.runtime.Value;
 
 import java.util.Objects;
 
+/**
+ * An expression, that calls an object's method. It's represented in source by following an expression, that yields
+ * an object, with a dot and an identifier naming the method. Available methods depend on the type of the object.
+ */
 public class MethodExpression extends Expression {
 
     private Expression left;
     private String name;
 
+    /**
+     *
+     * @param left The expression yielding the object from which the method is to be selected.
+     * @param name The name of the method.
+     */
     public MethodExpression(Expression left, String name) {
         this.left = left;
         this.name = name;

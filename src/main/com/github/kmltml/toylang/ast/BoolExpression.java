@@ -8,6 +8,10 @@ import com.github.kmltml.toylang.runtime.value.BoolValue;
 
 import java.util.Objects;
 
+/**
+ * A boolean literal, represented in source by <code>true</code> and <code>false</code> keywords.
+ * It just evaluates to the corresponding value of type Bool.
+ */
 public class BoolExpression extends Expression {
 
     private boolean value;

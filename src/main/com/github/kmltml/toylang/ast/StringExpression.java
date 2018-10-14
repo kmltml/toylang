@@ -8,6 +8,9 @@ import com.github.kmltml.toylang.runtime.value.StringValue;
 
 import java.util.Objects;
 
+/**
+ * A string literal expression.
+ */
 public class StringExpression extends Expression {
 
     private String value;

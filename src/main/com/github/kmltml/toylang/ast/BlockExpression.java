@@ -9,8 +9,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a block expression delimited in source by braces and containing (possibly zero) expressions, which
+ * are evaluated sequentially. The yielded value is that of the last evaluated expression or Unit, if there are none.
+ * The block expression also introduces a new scope, which means, that any variables defined within will not be accessible
+ * outside of the block.
+ *
+ * Example:
+ * <code>
+ *     var x = 10;
+ *     {
+ *         var x = 20;
+ *         x; // -> 20
+ *     }
+ *     x; // -> 10
+ * </code>
+ */
 public class BlockExpression extends Expression {
-
 
     private List<Expression> statements;
 
